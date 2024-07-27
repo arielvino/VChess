@@ -1,0 +1,4 @@
+I am stuck at:
+
+I need the action info to be pure data.
+That means, an action must be able to be performed in any Game instance, based only on the parameters it has, and be free from any references.

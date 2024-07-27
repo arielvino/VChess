@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">VChess</string>
+    <string name="title_activity_local_game">LocalGameActivity</string>
+    <string name="title_activity_play_lan">PlayLanActivity</string>
+    <string name="title_activity_host_game_dialog">HostGameDialog</string>
+    <string name="title_activity_scan_games">ScanGamesActivity</string>
+    <string name="title_activity_host_game">HostGameActivity</string>
+</resources>

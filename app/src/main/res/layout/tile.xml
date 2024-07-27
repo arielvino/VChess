@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/border">
+    <ImageView
+        android:layout_margin="3dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/body"
+        />
+
+</FrameLayout>

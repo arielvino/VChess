@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/start_scanning_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="start scanning" />
+
+    <TextView
+        android:id="@+id/scanning_in_process_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="scanning..."
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/result_display"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+</LinearLayout>
