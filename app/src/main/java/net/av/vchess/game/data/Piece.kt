@@ -23,7 +23,7 @@ abstract class Piece(
         }
     abstract val capturable: Boolean
     abstract val canCapture: Boolean
-    abstract val consistentMobility: Mobility
+    abstract var consistentMobility: Mobility
     abstract var ruledMobility: Mobility
 
     abstract fun listUnfilteredPossibleTurns(): ArrayList<TurnInfo>

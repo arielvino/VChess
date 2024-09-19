@@ -26,7 +26,7 @@ class HostGameActivity : ComponentActivity() {
         setContentView(R.layout.host_game_activity)
 
         gameNameLabel = findViewById(R.id.game_name_label)
-        waitingLabel = findViewById(R.id.waiting_label)
+        waitingLabel = findViewById(R.id.message_box)
         connectedLabel = findViewById(R.id.connected_label)
 
         val name: String = intent.extras!!.getString(GAME_NAME_KEY)!!

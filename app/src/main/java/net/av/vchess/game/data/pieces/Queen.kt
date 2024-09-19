@@ -11,7 +11,7 @@ class Queen(
     stepsCounter: Int = 0
 ) : Rider(color, board, location, stepsCounter) {
     override val canCapture: Boolean = true
-    override val consistentMobility: Mobility = Mobility.Normal
+    override var consistentMobility: Mobility = Mobility.Normal
     override var ruledMobility: Mobility = consistentMobility
         set(value) { field = value }
     override val capturable: Boolean = true
