@@ -11,23 +11,25 @@ class GameSearcher(private val listener: ResultCollector) {
         val localIp = NetworkUtils.getLocalIpAddress() ?: return
         val networkIp = localIp.substring(0, localIp.lastIndexOf('.'))
         thread {
-            for (y in 1..254) {
-                thread {
-                    var socket: Socket? = null
-                    try {
-                        val ipAddress = InetAddress.getByName("${networkIp}.${y}")
-                        if (!ipAddress.hostAddress.contentEquals(NetworkUtils.getLocalIpAddress())) {
-                            socket = Socket(ipAddress, 50005)
-                            BinaryUtils.sendMessage(socket.getOutputStream(), "vchess ping")
-                            val fakeId = BinaryUtils.readMessage(socket.getInputStream())
-                            listener.onResultFound(fakeId + " " + ipAddress.hostAddress)
-                        }
-                    } catch (e: IOException) {
-                        print(e.stackTrace)
-                    } finally {
-                        socket?.close()
-                        if(y==254){
-                            listener.onFinish()
+            for (port in NetworkConfiguration.GameInformerPorts) {
+                for (y in 1..254) {
+                    thread {
+                        var socket: Socket? = null
+                        try {
+                            val ipAddress = InetAddress.getByName("${networkIp}.${y}")
+                            if (!ipAddress.hostAddress.contentEquals(NetworkUtils.getLocalIpAddress())) {
+                                socket = Socket(ipAddress, port)
+                                BinaryUtils.sendMessage(socket.getOutputStream(), "vchess ping")
+                                val fakeId = BinaryUtils.readMessage(socket.getInputStream())
+                                listener.onResultFound(fakeId + " " + ipAddress.hostAddress)
+                            }
+                        } catch (e: IOException) {
+                            print(e.stackTrace)
+                        } finally {
+                            socket?.close()
+                            if (y == 254) {
+                                listener.onFinish()
+                            }
                         }
                     }
                 }
