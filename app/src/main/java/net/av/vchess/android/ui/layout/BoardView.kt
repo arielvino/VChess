@@ -1,23 +1,13 @@
 package net.av.vchess.android.ui.layout
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.drawable.Drawable
-import android.text.TextPaint
-import android.util.AttributeSet
-import android.view.View
-import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.GridLayout
-import android.widget.LinearLayout
-import net.av.vchess.R
 import net.av.vchess.android.BoardViewModel
 import net.av.vchess.android.TileViewModel
 import net.av.vchess.game.data.ActualGame
-import net.av.vchess.game.data.Board
-import net.av.vchess.game.data.GameRepresentation
+import kotlin.properties.Delegates
 
 /**
  * TODO: document your custom view class.
@@ -28,33 +18,45 @@ class BoardView(
     val boardViewModel: BoardViewModel = BoardViewModel(game)
 ) : FrameLayout(context) {
     val tiles: ArrayList<ArrayList<TileView>> = arrayListOf()
+    var tileSize by Delegates.notNull<Int>()
 
     init {
-        val tileSize = 130
+        val gridLayout = GridLayout(context)
+        gridLayout.columnCount = game.board.width
+        gridLayout.rowCount = game.board.height
+        gridLayout.layoutDirection = LAYOUT_DIRECTION_LTR
+        addView(gridLayout)
 
-        val linesOfTheBoard: LinearLayout = LinearLayout(context)
-        linesOfTheBoard.orientation = LinearLayout.VERTICAL
-        addView(linesOfTheBoard)
+        // Wait for the parent view to be laid out before calculating the tile size
+        viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // Remove the listener to avoid multiple callbacks
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-        for (y in 0..<game.board.height) {
-            val line = LinearLayout(context)
-            line.orientation = LinearLayout.HORIZONTAL
-            line.layoutDirection = LAYOUT_DIRECTION_LTR
-            linesOfTheBoard.addView(line)
+                // Calculate the tile size based on the parent width and the number of columns
+                tileSize = width / game.board.width
 
-            for (x in 0..<game.board.width) {
-                val tile = TileView(context)
-                tile.layoutParams = LinearLayout.LayoutParams(tileSize, tileSize)
-                line.addView(tile)
-                val model: TileViewModel =
-                    boardViewModel.getTile(x, boardViewModel.board.height - 1 - y)
-                model.listener = tile
-                model.refresh()
+                for (y in 0.until(game.board.height)) {
+                    for (x in 0.until(game.board.width)) {
+                        val tile = TileView(context)
+                        val layoutParams = GridLayout.LayoutParams()
+                        layoutParams.width = tileSize
+                        layoutParams.height = tileSize
+                        tile.layoutParams = layoutParams
+                        gridLayout.addView(tile)
 
-                tile.setOnClickListener {
-                    boardViewModel.getTile(x, boardViewModel.board.height - 1 - y).onClick()
+                        val model: TileViewModel =
+                            boardViewModel.getTile(x, boardViewModel.board.height - 1 - y)
+                        model.listener = tile
+                        model.refresh()
+
+                        tile.setOnClickListener {
+                            boardViewModel.getTile(x, boardViewModel.board.height - 1 - y).onClick()
+                        }
+                    }
                 }
             }
-        }
+        })
     }
 }

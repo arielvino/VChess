@@ -20,6 +20,11 @@
         android:theme="@style/Theme.VChess"
         tools:targetApi="31">
         <activity
+            android:name=".android.ui.layout.JoinGameActivity"
+            android:exported="false"
+            android:label="@string/title_activity_join_game"
+            android:theme="@style/Theme.VChess" />
+        <activity
             android:name=".android.ui.layout.HostGameActivity"
             android:exported="false"
             android:label="@string/title_activity_host_game"
@@ -47,7 +52,6 @@
         <activity
             android:name=".android.ui.layout.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.VChess">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

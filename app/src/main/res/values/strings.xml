@@ -5,4 +5,8 @@
     <string name="title_activity_host_game_dialog">HostGameDialog</string>
     <string name="title_activity_scan_games">ScanGamesActivity</string>
     <string name="title_activity_host_game">HostGameActivity</string>
+    <string name="title_activity_join_game">JoinGameActivity</string>
+    <string name="waiting_for_a_player">Waiting for a player…</string>
+    <string name="connected_to">connected to %1$s.</string>
+    <string name="received">"Received: %1$s"</string>
 </resources>

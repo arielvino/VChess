@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import net.av.vchess.android.TileViewModel
 
@@ -20,11 +20,11 @@ class TileView : FrameLayout, TileViewModel.ChangesListener {
     private lateinit var body: ImageView
 
     constructor(context: Context) : super(context) {
-        init(null, 0)
+        init()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
+        init()
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
@@ -32,14 +32,22 @@ class TileView : FrameLayout, TileViewModel.ChangesListener {
         attrs,
         defStyle
     ) {
-        init(attrs, defStyle)
+        init()
     }
 
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
+    private fun init() {
         body = ImageView(context)
         body
         addView(body)
-        setPadding(18)
+        viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // Remove the listener to avoid multiple callbacks
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                setPadding((width * 0.10).toInt())
+            }
+        })
     }
 
     override fun onBorderColorChanged(colorId: Int) {

@@ -7,10 +7,13 @@ import kotlin.concurrent.thread
 
 
 class GameSearcher(private val listener: ResultCollector) {
+
+    private lateinit var mainThread: Thread
+
     fun scanForGames() {
         val localIp = NetworkUtils.getLocalIpAddress() ?: return
         val networkIp = localIp.substring(0, localIp.lastIndexOf('.'))
-        thread {
+        mainThread = thread {
             for (port in NetworkConfiguration.GameInformerPorts) {
                 for (y in 1..254) {
                     thread {
@@ -27,7 +30,7 @@ class GameSearcher(private val listener: ResultCollector) {
                             print(e.stackTrace)
                         } finally {
                             socket?.close()
-                            if (y == 254) {
+                            if (y == 254 && port == NetworkConfiguration.GameInformerPorts.last()) {
                                 listener.onFinish()
                             }
                         }
@@ -35,6 +38,10 @@ class GameSearcher(private val listener: ResultCollector) {
                 }
             }
         }
+    }
+
+    fun stopScan(){
+        mainThread.interrupt()
     }
 
 
