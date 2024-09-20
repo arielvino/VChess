@@ -10,6 +10,7 @@ interface IConnector {
     fun send(message: String)
     fun receive(): String
     fun isConnected():Boolean
+    fun stop()
 
     interface IListener {
         fun onConnect(clientAlias: String)

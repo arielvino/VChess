@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("plugin.serialization") version "2.0.20"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" // this version matches your Kotlin version
 }
 
 android {
@@ -71,6 +73,8 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+
 
     val composeBom = platform("androidx.compose:compose-bom:2024.05.00")
     implementation(composeBom)

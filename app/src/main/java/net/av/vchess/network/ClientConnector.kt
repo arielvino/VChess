@@ -10,18 +10,17 @@ class ClientConnector(
     ipAddress: String,
     myNickname: String
 ) : IConnector {
+    private var socket: Socket? = null
     private var inputStream: InputStream? = null
     private var outputStream: OutputStream? = null
 
     init {
         thread {
-            var socket: Socket? = null
-
             for (port in NetworkConfiguration.GamePorts) {
                 try {
                     println("Trying to connect on port $port...")
                     socket = Socket(ipAddress, port)
-                    println("connected to remote port $port.")
+                    println("Connected to remote port $port.")
                     break
                 } catch (e: Exception) {
                     println("Failed to connect on port $port.")
@@ -33,10 +32,10 @@ class ClientConnector(
                 socket!!.getOutputStream(),
                 "${IConnector.CONNECT_KEYWORD} $myNickname"
             )
-            val res = BinaryUtils.readMessage(socket.getInputStream())
+            val res = BinaryUtils.readMessage(socket!!.getInputStream())
             if (res.contentEquals(IConnector.OK_KEYWORD)) {
-                inputStream = socket.getInputStream()
-                outputStream = socket.getOutputStream()
+                inputStream = socket!!.getInputStream()
+                outputStream = socket!!.getOutputStream()
 
                 listener.onConnect(myNickname)
             }
@@ -59,6 +58,10 @@ class ClientConnector(
 
     override fun isConnected(): Boolean {
         return outputStream != null
+    }
+
+    override fun stop() {
+        socket?.close()
     }
 
 }

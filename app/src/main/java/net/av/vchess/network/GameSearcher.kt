@@ -3,6 +3,7 @@ package net.av.vchess.network
 import java.io.IOException
 import java.net.Socket
 import java.net.InetAddress
+import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 
@@ -14,8 +15,10 @@ class GameSearcher(private val listener: ResultCollector) {
         val localIp = NetworkUtils.getLocalIpAddress() ?: return
         val networkIp = localIp.substring(0, localIp.lastIndexOf('.'))
         mainThread = thread {
+            var latch = CountDownLatch(0)
             for (port in NetworkConfiguration.GameInformerPorts) {
                 for (y in 1..254) {
+                    latch = CountDownLatch((latch.count + 1).toInt())
                     thread {
                         var socket: Socket? = null
                         try {
@@ -30,12 +33,17 @@ class GameSearcher(private val listener: ResultCollector) {
                             print(e.stackTrace)
                         } finally {
                             socket?.close()
-                            if (y == 254 && port == NetworkConfiguration.GameInformerPorts.last()) {
-                                listener.onFinish()
-                            }
+                            latch.countDown()
                         }
                     }
                 }
+            }
+            try {
+                latch.await()
+                listener.onFinish()
+            }
+            catch (e:InterruptedException){
+                println("Search interrupted.")
             }
         }
     }

@@ -11,6 +11,8 @@ import net.av.vchess.R
 import net.av.vchess.network.GameSearcher
 
 class ScanGamesActivity : ComponentActivity() {
+    lateinit var gameSearcher: GameSearcher
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.scan_game_activity)
@@ -19,7 +21,6 @@ class ScanGamesActivity : ComponentActivity() {
         val scanningInProcessLabel = findViewById<TextView>(R.id.scanning_in_process_label)
         val resultList = findViewById<ViewGroup>(R.id.result_display)
 
-        var gameSearcher:GameSearcher? =null
         gameSearcher = GameSearcher(object : GameSearcher.ResultCollector {
             override fun onResultFound(fakeId: String) {
                 runOnUiThread {
@@ -27,7 +28,7 @@ class ScanGamesActivity : ComponentActivity() {
                     gameOffer.text = fakeId
                     resultList.addView(gameOffer)
                     gameOffer.setOnClickListener {
-                        gameSearcher!!.stopScan()
+                        gameSearcher.stopScan()
                         val intent = Intent(this@ScanGamesActivity, JoinGameActivity::class.java)
                         val ipAddress = fakeId.substring(fakeId.lastIndexOf(" ") + 1)
                         intent.putExtra(JoinGameActivity.IP_ADDRESS_KEY, ipAddress)
@@ -52,5 +53,11 @@ class ScanGamesActivity : ComponentActivity() {
         }
 
         startScanningButton.performClick()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        gameSearcher.stopScan()
     }
 }

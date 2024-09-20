@@ -3,9 +3,11 @@ package net.av.vchess.network
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.ServerSocket
+import java.net.Socket
 import kotlin.concurrent.thread
 
 class HostConnector(private val listener: IConnector.IListener) : IConnector {
+    private var client: Socket? = null
     private var inputStream: InputStream? = null
     private var outputStream: OutputStream? = null
 
@@ -24,12 +26,12 @@ class HostConnector(private val listener: IConnector.IListener) : IConnector {
         }
         thread {
             while (!isConnected()) {
-                val client = serverSocket!!.accept()
+                client = serverSocket!!.accept()
                 var message: String
-                message = BinaryUtils.readMessage(client.getInputStream())
+                message = BinaryUtils.readMessage(client!!.getInputStream())
                 if (message.startsWith(IConnector.CONNECT_KEYWORD)) {
-                    inputStream = client.getInputStream()
-                    outputStream = client.getOutputStream()
+                    inputStream = client!!.getInputStream()
+                    outputStream = client!!.getOutputStream()
                     send(IConnector.OK_KEYWORD)
                     listener.onConnect(message.substring(message.indexOf(" ") + 1))
                 }
@@ -51,6 +53,10 @@ class HostConnector(private val listener: IConnector.IListener) : IConnector {
 
     override fun isConnected(): Boolean {
         return outputStream != null
+    }
+
+    override fun stop() {
+        client?.close()
     }
 
 }

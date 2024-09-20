@@ -46,10 +46,13 @@ class Encryptor {
 
     fun send(message: String) {
         connector.send(AesFactory.encryptWithAESGCM(message, symmetricKey))
+        println("Sent: $message")
     }
 
     fun receive(): String {
-        return AesFactory.decryptWithAESGCM(connector.receive(), symmetricKey)
+        val message = AesFactory.decryptWithAESGCM(connector.receive(), symmetricKey)
+        println("Received: $message")
+        return message
     }
 
     object RsaFactory {

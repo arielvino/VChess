@@ -5,10 +5,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import kotlinx.serialization.json.Json
 import net.av.vchess.R
+import net.av.vchess.game.data.ActualGame
+import net.av.vchess.game.data.IGameRuler
+import net.av.vchess.game.data.Rulers.TestRuler
+import net.av.vchess.io.XmlBordSource
 import net.av.vchess.network.ClientConnector
 import net.av.vchess.network.Encryptor
 import net.av.vchess.network.IConnector
+import net.av.vchess.network.data.NetworkGameMetadata
 import kotlin.concurrent.thread
 
 class JoinGameActivity : ComponentActivity() {
@@ -19,7 +25,8 @@ class JoinGameActivity : ComponentActivity() {
     private lateinit var boardHolder: ViewGroup
     private lateinit var messageBox: TextView
 
-    lateinit var encryptor: Encryptor
+    private var connector: ClientConnector? =null
+    private lateinit var encryptor: Encryptor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +53,28 @@ class JoinGameActivity : ComponentActivity() {
             )
             @Suppress("ControlFlowWithEmptyBody")
             while (!connector.isConnected());
+            messageBox.text = getString(R.string.encrypting)
             encryptor = Encryptor(connector)
-            runOnUiThread {
-                Toast.makeText(
-                    this@JoinGameActivity,
-                    encryptor.receive(),
-                    Toast.LENGTH_LONG
-                ).show()
+            messageBox.text = getString(R.string.encryption_established)
+            val xmlBoardString = encryptor.receive()
+            val boardSource = XmlBordSource(xmlBoardString)
+            val networkGameMetadata: NetworkGameMetadata =
+                Json.decodeFromString(encryptor.receive())
+            var ruler: IGameRuler? = null
+            if (networkGameMetadata.rulerName.contentEquals("test")) {
+                ruler = TestRuler(boardSource, networkGameMetadata.currentTurn)
             }
-            encryptor.send("I'm the client.")
+            val game = ActualGame(boardSource, networkGameMetadata.currentTurn, ruler!!)
+            val boardView = BoardView(this@JoinGameActivity, game)
+            runOnUiThread {
+                boardHolder.addView(boardView)
+            }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        connector?.stop()
     }
 }

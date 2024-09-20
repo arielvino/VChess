@@ -15,7 +15,7 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
-class XmlBoardParser : IBoardParser {
+object XmlBoardParser : IBoardParser {
     override fun readBoard(rawData: String): Board {
         val documentBuilderFactory = DocumentBuilderFactory.newInstance()
         val documentBuilder = documentBuilderFactory.newDocumentBuilder()
