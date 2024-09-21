@@ -6,7 +6,6 @@ import java.net.Socket
 import kotlin.concurrent.thread
 
 class ClientConnector(
-    private val listener: IConnector.IListener,
     ipAddress: String,
     myNickname: String
 ) : IConnector {
@@ -36,8 +35,6 @@ class ClientConnector(
             if (res.contentEquals(IConnector.OK_KEYWORD)) {
                 inputStream = socket!!.getInputStream()
                 outputStream = socket!!.getOutputStream()
-
-                listener.onConnect(myNickname)
             }
         }
     }

@@ -6,7 +6,7 @@ import java.net.ServerSocket
 import java.net.Socket
 import kotlin.concurrent.thread
 
-class HostConnector(private val listener: IConnector.IListener) : IConnector {
+class HostConnector(private val listener: IListener) : IConnector {
     private var client: Socket? = null
     private var inputStream: InputStream? = null
     private var outputStream: OutputStream? = null
@@ -33,6 +33,7 @@ class HostConnector(private val listener: IConnector.IListener) : IConnector {
                     inputStream = client!!.getInputStream()
                     outputStream = client!!.getOutputStream()
                     send(IConnector.OK_KEYWORD)
+                    println("Connection created.")
                     listener.onConnect(message.substring(message.indexOf(" ") + 1))
                 }
             }
@@ -59,4 +60,7 @@ class HostConnector(private val listener: IConnector.IListener) : IConnector {
         client?.close()
     }
 
+    interface IListener{
+        fun onConnect(clientName:String)
+    }
 }

@@ -8,13 +8,13 @@
         android:id="@+id/start_scanning_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="start scanning" />
+        android:text="@string/refresh" />
 
     <TextView
         android:id="@+id/scanning_in_process_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="scanning..."
+        android:text="@string/scanning"
         android:visibility="gone" />
 
     <ScrollView

@@ -3,7 +3,6 @@ package net.av.vchess.android.ui.layout
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import kotlinx.serialization.json.Json
 import net.av.vchess.R
@@ -13,7 +12,6 @@ import net.av.vchess.game.data.Rulers.TestRuler
 import net.av.vchess.io.XmlBordSource
 import net.av.vchess.network.ClientConnector
 import net.av.vchess.network.Encryptor
-import net.av.vchess.network.IConnector
 import net.av.vchess.network.data.NetworkGameMetadata
 import kotlin.concurrent.thread
 
@@ -25,7 +23,7 @@ class JoinGameActivity : ComponentActivity() {
     private lateinit var boardHolder: ViewGroup
     private lateinit var messageBox: TextView
 
-    private var connector: ClientConnector? =null
+    private var connector: ClientConnector? = null
     private lateinit var encryptor: Encryptor
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,22 +35,8 @@ class JoinGameActivity : ComponentActivity() {
         val ipAddress = intent.getStringExtra(IP_ADDRESS_KEY)
 
         thread {
-            val connector = ClientConnector(
-                object : IConnector.IListener {
-                    override fun onConnect(clientAlias: String) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@JoinGameActivity,
-                                "Connected!",
-                                Toast.LENGTH_LONG
-                            ).show()
-
-                        }
-                    }
-                }, ipAddress!!, "Fabricated nick name."
-            )
-            @Suppress("ControlFlowWithEmptyBody")
-            while (!connector.isConnected());
+            val connector = ClientConnector(ipAddress!!, "Fabricated nick name.")
+            @Suppress("ControlFlowWithEmptyBody") while (!connector.isConnected());
             messageBox.text = getString(R.string.encrypting)
             encryptor = Encryptor(connector)
             messageBox.text = getString(R.string.encryption_established)
@@ -72,8 +56,8 @@ class JoinGameActivity : ComponentActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
 
         connector?.stop()
     }

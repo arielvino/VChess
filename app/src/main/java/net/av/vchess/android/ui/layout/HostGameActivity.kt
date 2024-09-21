@@ -14,7 +14,6 @@ import net.av.vchess.io.XmlBoardParser
 import net.av.vchess.network.Encryptor
 import net.av.vchess.network.GamePendingInformer
 import net.av.vchess.network.HostConnector
-import net.av.vchess.network.IConnector
 import net.av.vchess.network.data.NetworkGameMetadata
 import net.av.vchess.reusables.PlayerColor
 import kotlin.concurrent.thread
@@ -30,7 +29,7 @@ class HostGameActivity : ComponentActivity() {
     private lateinit var boardHolder: ViewGroup
 
     private lateinit var connector:HostConnector
-    private lateinit var informer:GamePendingInformer
+    private var informer:GamePendingInformer? = null
     private lateinit var encryptor: Encryptor
     private lateinit var game: ActualGame
 
@@ -48,7 +47,7 @@ class HostGameActivity : ComponentActivity() {
         gameNameLabel.text = name
 
         informer = GamePendingInformer(name)
-        informer.start()
+        informer!!.start()
 
         messageBox.text = getString(R.string.waiting_for_a_player)
 
@@ -57,10 +56,10 @@ class HostGameActivity : ComponentActivity() {
         boardHolder.addView(boardView)
 
         thread {
-            connector = HostConnector(object : IConnector.IListener {
+            connector = HostConnector(object : HostConnector.IListener {
                 override fun onConnect(clientAlias: String) {
+                    informer!!.stop()
                     runOnUiThread {
-                        informer.stop()
                         messageBox.text = getString(R.string.connected_to, clientAlias)
                     }
                 }
@@ -77,10 +76,10 @@ class HostGameActivity : ComponentActivity() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
 
         connector.stop()
-        informer.stop()
+        informer?.stop()
     }
 }

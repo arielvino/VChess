@@ -1,5 +1,7 @@
 package net.av.vchess.network
 
+import kotlinx.serialization.json.Json
+import net.av.vchess.network.data.GameInformerData
 import java.io.IOException
 import java.net.Socket
 import java.net.InetAddress
@@ -9,12 +11,18 @@ import kotlin.concurrent.thread
 
 class GameSearcher(private val listener: ResultCollector) {
 
-    private lateinit var mainThread: Thread
+    private var mainThread: Thread? = null
 
     fun scanForGames() {
-        val localIp = NetworkUtils.getLocalIpAddress() ?: return
+        val localIp = NetworkUtils.getLocalIpAddress()
+        if (localIp == null) {
+            listener.onFinish()
+            return
+        }
         val networkIp = localIp.substring(0, localIp.lastIndexOf('.'))
+        mainThread?.interrupt()
         mainThread = thread {
+            listener.onSearchStarted()
             var latch = CountDownLatch(0)
             for (port in NetworkConfiguration.GameInformerPorts) {
                 for (y in 1..254) {
@@ -22,12 +30,15 @@ class GameSearcher(private val listener: ResultCollector) {
                     thread {
                         var socket: Socket? = null
                         try {
-                            val ipAddress = InetAddress.getByName("${networkIp}.${y}")
-                            if (!ipAddress.hostAddress.contentEquals(NetworkUtils.getLocalIpAddress())) {
+                            val ipAddress = "${networkIp}.${y}"
+                            if (!ipAddress.contentEquals(NetworkUtils.getLocalIpAddress())) {
                                 socket = Socket(ipAddress, port)
                                 BinaryUtils.sendMessage(socket.getOutputStream(), "vchess ping")
-                                val fakeId = BinaryUtils.readMessage(socket.getInputStream())
-                                listener.onResultFound(fakeId + " " + ipAddress.hostAddress)
+                                val rawData = BinaryUtils.readMessage(socket.getInputStream())
+                                val gameInformerData =
+                                    Json.decodeFromString<GameInformerData>(rawData)
+                                gameInformerData.ipAddress = ipAddress
+                                listener.onResultFound(gameInformerData)
                             }
                         } catch (e: IOException) {
                             print(e.stackTrace)
@@ -41,20 +52,21 @@ class GameSearcher(private val listener: ResultCollector) {
             try {
                 latch.await()
                 listener.onFinish()
-            }
-            catch (e:InterruptedException){
-                println("Search interrupted.")
+            } catch (e: InterruptedException) {
+                listener.onSearchStopped()
             }
         }
     }
 
-    fun stopScan(){
-        mainThread.interrupt()
+    fun stopScan() {
+        mainThread?.interrupt()
     }
 
 
     interface ResultCollector {
-        fun onResultFound(fakeId: String)
+        fun onSearchStarted()
+        fun onResultFound(data: GameInformerData)
         fun onFinish()
+        fun onSearchStopped()
     }
 }
