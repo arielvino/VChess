@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <Button
-        android:id="@+id/start_scanning_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/refresh" />
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/scanning_in_process_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/scanning"
-        android:visibility="gone" />
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/result_list_wrapper"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
+        android:id="@+id/result_list_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/start_scanning_button"
+        app:layout_constraintTop_toBottomOf="@+id/scanning_in_process_label"
+        tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
-            android:id="@+id/result_display"
+            android:id="@+id/result_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/start_scanning_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/refresh_button_background"
+        android:text="@string/refresh"
+        android:textColor="#E1BEE7"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

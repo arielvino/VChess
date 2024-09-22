@@ -8,6 +8,10 @@ import java.net.ServerSocket
 import kotlin.concurrent.thread
 
 class GamePendingInformer(private val gameName: String, private val recipientColor:PlayerColor? = null) {
+    companion object{
+        const val PING_KEYWORD = "VCHESS_PING"
+    }
+
     private lateinit var serverSocket:ServerSocket
     private var available = true
 
@@ -31,7 +35,7 @@ class GamePendingInformer(private val gameName: String, private val recipientCol
                 }
                 thread {
                     val message = BinaryUtils.readMessage(clientSocket.getInputStream())
-                    if (message.contentEquals("vchess ping")) {
+                    if (message.contentEquals(PING_KEYWORD)) {
                         println("Ping received.")
                         val serializedMessage:String = Json.encodeToString(GameInformerData("", recipientColor, gameName))
                         BinaryUtils.sendMessage(clientSocket.getOutputStream(), serializedMessage)

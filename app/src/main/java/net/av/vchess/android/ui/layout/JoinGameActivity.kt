@@ -29,6 +29,8 @@ class JoinGameActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_game_activity)
+        actionBar?.hide()
+
         boardHolder = findViewById(R.id.board_holder)
         messageBox = findViewById(R.id.message_box)
 

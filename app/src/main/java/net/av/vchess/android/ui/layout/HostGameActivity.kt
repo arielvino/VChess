@@ -36,6 +36,7 @@ class HostGameActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.host_game_activity)
+        actionBar?.hide()
 
         gameNameLabel = findViewById(R.id.game_name_label)
         messageBox = findViewById(R.id.message_box)
@@ -57,10 +58,10 @@ class HostGameActivity : ComponentActivity() {
 
         thread {
             connector = HostConnector(object : HostConnector.IListener {
-                override fun onConnect(clientAlias: String) {
+                override fun onConnect(clientName: String) {
                     informer!!.stop()
                     runOnUiThread {
-                        messageBox.text = getString(R.string.connected_to, clientAlias)
+                        messageBox.text = getString(R.string.connected_to, clientName)
                     }
                 }
             })

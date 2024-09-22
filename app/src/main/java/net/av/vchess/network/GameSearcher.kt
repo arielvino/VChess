@@ -4,7 +4,7 @@ import kotlinx.serialization.json.Json
 import net.av.vchess.network.data.GameInformerData
 import java.io.IOException
 import java.net.Socket
-import java.net.InetAddress
+import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
@@ -23,37 +23,44 @@ class GameSearcher(private val listener: ResultCollector) {
         mainThread?.interrupt()
         mainThread = thread {
             listener.onSearchStarted()
-            var latch = CountDownLatch(0)
+            val latch = CountDownLatch(254*NetworkConfiguration.GameInformerPorts.size)
             for (port in NetworkConfiguration.GameInformerPorts) {
                 for (y in 1..254) {
-                    latch = CountDownLatch((latch.count + 1).toInt())
                     thread {
-                        var socket: Socket? = null
+                        val socket = Socket()
+                        val ipAddress = "${networkIp}.${y}"
                         try {
-                            val ipAddress = "${networkIp}.${y}"
-                            if (!ipAddress.contentEquals(NetworkUtils.getLocalIpAddress())) {
-                                socket = Socket(ipAddress, port)
-                                BinaryUtils.sendMessage(socket.getOutputStream(), "vchess ping")
-                                val rawData = BinaryUtils.readMessage(socket.getInputStream())
-                                val gameInformerData =
-                                    Json.decodeFromString<GameInformerData>(rawData)
-                                gameInformerData.ipAddress = ipAddress
-                                listener.onResultFound(gameInformerData)
-                            }
-                        } catch (e: IOException) {
-                            print(e.stackTrace)
+                            socket.connect(InetSocketAddress(ipAddress, port), 2000)
+                            BinaryUtils.sendMessage(
+                                socket.getOutputStream(),
+                                GamePendingInformer.PING_KEYWORD
+                            )
+                            val rawData = BinaryUtils.readMessage(socket.getInputStream())
+                            val gameInformerData =
+                                Json.decodeFromString<GameInformerData>(rawData)
+                            gameInformerData.ipAddress = ipAddress
+                            listener.onResultFound(gameInformerData)
+                        } catch (_: IOException) {
                         } finally {
-                            socket?.close()
+                            if (socket.isConnected) {
+                                println("Successful: $ipAddress:$port")
+                            } else {
+                                println("Failed: $ipAddress:$port")
+                            }
+                            socket.close()
                             latch.countDown()
+                            println("Remaining threads: ${latch.count}")
                         }
                     }
                 }
             }
             try {
+                println("Latch is awaiting ${latch.count} threads.")
                 latch.await()
                 listener.onFinish()
+                println("Search ended.")
             } catch (e: InterruptedException) {
-                listener.onSearchStopped()
+                println("Searcher stopped.")
             }
         }
     }
@@ -67,6 +74,5 @@ class GameSearcher(private val listener: ResultCollector) {
         fun onSearchStarted()
         fun onResultFound(data: GameInformerData)
         fun onFinish()
-        fun onSearchStopped()
     }
 }
