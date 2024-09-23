@@ -9,7 +9,7 @@
     <string name="waiting_for_a_player">Waiting for a player…</string>
     <string name="connected_to">connected to %1$s.</string>
     <string name="received">"Received: %1$s"</string>
-    <string name="encrypting">Encrypting...</string>
+    <string name="encrypting">Encrypting…</string>
     <string name="encryption_established">Encryption established.</string>
     <string name="refresh">Refresh</string>
     <string name="scanning">scanning</string>

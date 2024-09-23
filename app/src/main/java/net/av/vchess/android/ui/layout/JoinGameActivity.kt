@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import kotlinx.serialization.json.Json
 import net.av.vchess.R
+import net.av.vchess.android.BoardViewModel
 import net.av.vchess.game.data.ActualGame
 import net.av.vchess.game.data.IGameRuler
 import net.av.vchess.game.data.Rulers.TestRuler
@@ -51,7 +52,7 @@ class JoinGameActivity : ComponentActivity() {
                 ruler = TestRuler(boardSource, networkGameMetadata.currentTurn)
             }
             val game = ActualGame(boardSource, networkGameMetadata.currentTurn, ruler!!)
-            val boardView = BoardView(this@JoinGameActivity, game)
+            val boardView = BoardView(this@JoinGameActivity, game.board, BoardViewModel(game))
             runOnUiThread {
                 boardHolder.addView(boardView)
             }

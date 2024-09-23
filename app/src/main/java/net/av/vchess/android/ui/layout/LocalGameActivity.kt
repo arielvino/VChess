@@ -2,11 +2,10 @@ package net.av.vchess.android.ui.layout
 
 import android.os.Bundle
 import android.widget.FrameLayout
-import android.widget.TextView
 import net.av.vchess.R
 import androidx.activity.ComponentActivity
+import net.av.vchess.android.BoardViewModel
 import net.av.vchess.game.data.ActualGame
-import net.av.vchess.game.data.GameRepresentation
 import net.av.vchess.game.data.Rulers.TestRuler
 import net.av.vchess.game.data.TestBoardRenderer
 import net.av.vchess.game.data.turn.MoveAction
@@ -24,7 +23,8 @@ class LocalGameActivity : ComponentActivity() {
         findViewById<FrameLayout>(R.id.board_holder).addView(
             BoardView(
                 this,
-                game
+                game.board,
+                BoardViewModel(game)
             )
         )
 

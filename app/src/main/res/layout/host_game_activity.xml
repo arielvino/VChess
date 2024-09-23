@@ -11,18 +11,14 @@
         />
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:id="@+id/board_holder"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Waiting for a player..."
+        android:text="@string/waiting_for_a_player"
         android:id="@+id/message_box"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/connected_label"
         />
 
 </LinearLayout>

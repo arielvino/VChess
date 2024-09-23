@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.av.vchess.R
+import net.av.vchess.android.BoardViewModel
 import net.av.vchess.game.data.ActualGame
 import net.av.vchess.game.data.Rulers.TestRuler
 import net.av.vchess.game.data.TestBoardRenderer
@@ -25,7 +26,6 @@ class HostGameActivity : ComponentActivity() {
 
     private lateinit var gameNameLabel: TextView
     private lateinit var messageBox: TextView
-    private lateinit var connectedLabel: TextView
     private lateinit var boardHolder: ViewGroup
 
     private lateinit var connector:HostConnector
@@ -40,7 +40,6 @@ class HostGameActivity : ComponentActivity() {
 
         gameNameLabel = findViewById(R.id.game_name_label)
         messageBox = findViewById(R.id.message_box)
-        connectedLabel = findViewById(R.id.connected_label)
         boardHolder = findViewById(R.id.board_holder)
 
 
@@ -53,7 +52,7 @@ class HostGameActivity : ComponentActivity() {
         messageBox.text = getString(R.string.waiting_for_a_player)
 
         game = ActualGame(TestBoardRenderer(), PlayerColor.White, TestRuler(TestBoardRenderer(), PlayerColor.White))
-        val boardView = BoardView(this, game)
+        val boardView = BoardView(this, game.board, BoardViewModel(game))
         boardHolder.addView(boardView)
 
         thread {
