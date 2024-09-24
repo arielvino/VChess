@@ -6,13 +6,13 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import net.av.vchess.android.SimpleTileViewModel
+import net.av.vchess.android.UnresponsiveTileViewModel
 
 
 /**
  * TODO: document your custom view class.
  */
-class TileView : FrameLayout, SimpleTileViewModel.ChangesListener {
+class TileView : FrameLayout, UnresponsiveTileViewModel.ChangesListener {
 
     private val border: View = this
     private lateinit var body: ImageView

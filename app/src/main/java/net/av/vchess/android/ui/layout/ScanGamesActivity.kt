@@ -42,8 +42,7 @@ class ScanGamesActivity : ComponentActivity() {
 
             override fun onResultFound(data: GameInformerData) {
                 runOnUiThread {
-                    val gameOffer = Button(this@ScanGamesActivity)
-                    gameOffer.text = data.gameName
+                    val gameOffer = GameOfferView(this@ScanGamesActivity, data)
                     resultList.addView(gameOffer)
                     gameOffer.setOnClickListener {
                         gameSearcher.stopScan()

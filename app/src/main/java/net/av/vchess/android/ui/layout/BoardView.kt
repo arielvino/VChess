@@ -5,8 +5,8 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import androidx.core.view.setPadding
-import net.av.vchess.android.SimpleBoardViewModel
-import net.av.vchess.android.SimpleTileViewModel
+import net.av.vchess.android.UnresponsiveBoardViewModel
+import net.av.vchess.android.UnresponsiveTileViewModel
 import net.av.vchess.game.data.Board
 import kotlin.math.max
 import kotlin.math.min
@@ -15,7 +15,7 @@ import kotlin.properties.Delegates
 class BoardView(
     context: Context,
     private val board: Board,
-    val boardViewModel: SimpleBoardViewModel
+    val boardViewModel: UnresponsiveBoardViewModel
 ) : FrameLayout(context) {
     val tiles: ArrayList<ArrayList<TileView>> = arrayListOf()
     var tileSize by Delegates.notNull<Int>()
@@ -34,7 +34,7 @@ class BoardView(
 
                 gridLayout.addView(tile)
 
-                val model: SimpleTileViewModel =
+                val model: UnresponsiveTileViewModel =
                     boardViewModel.getTile(x, y)
                 model.listener = tile
                 model.refresh()

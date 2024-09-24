@@ -8,7 +8,7 @@ import net.av.vchess.game.data.turn.MoveAction
 import net.av.vchess.game.data.turn.TurnInfo
 
 
-class TileViewModel(tile: Tile, override val board: BoardViewModel) :SimpleTileViewModel(tile, board) {
+open class TwoPlayersTileViewModel(tile: Tile, override val board: TwoPlayersBoardViewModel) :UnresponsiveTileViewModel(tile, board) {
 
     val turnsInfo: ArrayList<TurnInfo> = arrayListOf()
 
@@ -58,11 +58,11 @@ class TileViewModel(tile: Tile, override val board: BoardViewModel) :SimpleTileV
             for (turn in turns) {
                 for (action in turn.actions) {
                     if (action is MoveAction) {
-                        (board.getTile(action.destination) as TileViewModel).addTurn(turn)
+                        (board.getTile(action.destination) as TwoPlayersTileViewModel).addTurn(turn)
                         break
                     }
                     if (action is CaptureAction) {
-                        (board.getTile(action.origin) as TileViewModel).addTurn(turn)
+                        (board.getTile(action.origin) as TwoPlayersTileViewModel).addTurn(turn)
                         break
                     }
 

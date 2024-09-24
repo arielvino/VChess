@@ -2,14 +2,19 @@ package net.av.vchess.android
 
 import net.av.vchess.game.data.ActualGame
 
-class BoardViewModel(val game: ActualGame) : SimpleBoardViewModel(game.board) {
-    var selectedTile: TileViewModel? = null
+open class TwoPlayersBoardViewModel(val game: ActualGame) : UnresponsiveBoardViewModel(game.board) {
+    init {
+        createBoard()
+    }
 
-    override fun createBoard() {
+    var selectedTile: TwoPlayersTileViewModel? = null
+
+    private fun createBoard() {
+        tiles.clear()
         for (x in 0..<board.width) {
             tiles.add(arrayListOf())
             for (y in 0..<board.height) {
-                tiles[x].add(TileViewModel(board.getTile(x, y), this))
+                tiles[x].add(TwoPlayersTileViewModel(board.getTile(x, y), this))
                 board.getTile(x, y).addChangesListener(tiles[x][y])
             }
         }
@@ -25,7 +30,7 @@ class BoardViewModel(val game: ActualGame) : SimpleBoardViewModel(game.board) {
     fun cleanTargets() {
         for (line in tiles) {
             for (tile in line) {
-                (tile as TileViewModel).clearTurns()
+                (tile as TwoPlayersTileViewModel).clearTurns()
             }
         }
     }

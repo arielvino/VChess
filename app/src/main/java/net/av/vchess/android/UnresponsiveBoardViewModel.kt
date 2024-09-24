@@ -3,18 +3,18 @@ package net.av.vchess.android
 import net.av.vchess.game.data.Board
 import net.av.vchess.reusables.Vector2D
 
-open class SimpleBoardViewModel(val board: Board) {
-    val tiles: ArrayList<ArrayList<SimpleTileViewModel>> = arrayListOf()
+open class UnresponsiveBoardViewModel(val board: Board) {
+    val tiles: ArrayList<ArrayList<UnresponsiveTileViewModel>> = arrayListOf()
 
     init {
         createBoard()
     }
 
-    open fun createBoard(){
+    private fun createBoard(){
             for (x in 0..<board.width) {
                 tiles.add(arrayListOf())
                 for (y in 0..<board.height) {
-                    tiles[x].add(SimpleTileViewModel(board.getTile(x, y), this))
+                    tiles[x].add(UnresponsiveTileViewModel(board.getTile(x, y), this))
                     board.getTile(x, y).addChangesListener(tiles[x][y])
                 }
             }
@@ -28,11 +28,11 @@ open class SimpleBoardViewModel(val board: Board) {
         }
     }
 
-    fun getTile(x: Int, y: Int): SimpleTileViewModel {
+    fun getTile(x: Int, y: Int): UnresponsiveTileViewModel {
         return tiles[x][y]
     }
 
-    fun getTile(location: Vector2D): SimpleTileViewModel {
+    fun getTile(location: Vector2D): UnresponsiveTileViewModel {
         return getTile(location.x, location.y)
     }
 }

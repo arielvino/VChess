@@ -9,9 +9,9 @@ import net.av.vchess.R
 import net.av.vchess.game.data.Tile
 import net.av.vchess.reusables.PlayerColor
 
-open class SimpleTileViewModel(
+open class UnresponsiveTileViewModel(
     val tile: Tile,
-    open val board: SimpleBoardViewModel
+    open val board: UnresponsiveBoardViewModel
 ) : Tile.ChangesListener {
     companion object {
         fun getDrawableFromAsset(context: Context, fileName: String): Drawable? {

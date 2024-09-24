@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.FrameLayout
 import net.av.vchess.R
 import androidx.activity.ComponentActivity
-import net.av.vchess.android.BoardViewModel
+import net.av.vchess.android.TwoPlayersBoardViewModel
 import net.av.vchess.game.data.ActualGame
 import net.av.vchess.game.data.Rulers.TestRuler
 import net.av.vchess.game.data.TestBoardRenderer
@@ -24,7 +24,7 @@ class LocalGameActivity : ComponentActivity() {
             BoardView(
                 this,
                 game.board,
-                BoardViewModel(game)
+                TwoPlayersBoardViewModel(game)
             )
         )
 

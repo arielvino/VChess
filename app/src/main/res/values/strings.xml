@@ -13,4 +13,9 @@
     <string name="encryption_established">Encryption established.</string>
     <string name="refresh">Refresh</string>
     <string name="scanning">scanning</string>
+    <string name="lobby_name">Lobby name: %1$s</string>
+    <string name="game_name">Game name:</string>
+    <string name="black">black</string>
+    <string name="random">random</string>
+    <string name="white">white</string>
 </resources>
