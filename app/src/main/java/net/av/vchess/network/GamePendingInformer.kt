@@ -5,6 +5,7 @@ import kotlinx.serialization.encodeToString
 import net.av.vchess.android.ui.layout.HostGameDialog
 import net.av.vchess.network.data.GameInformerData
 import java.net.ServerSocket
+import java.net.Socket
 import kotlin.concurrent.thread
 
 class GamePendingInformer(private val gameName: String, private val recipientColor:HostGameDialog.MyColorSetting = HostGameDialog.MyColorSetting.Random) {
@@ -13,7 +14,6 @@ class GamePendingInformer(private val gameName: String, private val recipientCol
     }
 
     private lateinit var serverSocket:ServerSocket
-    private var available = true
 
     fun start() {
         for(port in NetworkConfiguration.GameInformerPorts){
@@ -28,9 +28,12 @@ class GamePendingInformer(private val gameName: String, private val recipientCol
             }
         }
         thread {
-            while (available) {
-                val clientSocket = serverSocket.accept()
-                if(!available){
+            while (true) {
+                var clientSocket :Socket
+                try {
+                    clientSocket = serverSocket.accept()
+                }
+                catch (e: Exception){
                     break
                 }
                 thread {
@@ -44,12 +47,11 @@ class GamePendingInformer(private val gameName: String, private val recipientCol
                     clientSocket.close()
                 }
             }
-            serverSocket.close()
             println("Game informer stopped.")
         }
     }
 
     fun stop(){
-        available = false
+        serverSocket.close()
     }
 }

@@ -35,18 +35,17 @@ class GameSearcher(private val listener: ResultCollector) {
                                 socket.getOutputStream(),
                                 GamePendingInformer.PING_KEYWORD
                             )
-                            val rawData = BinaryUtils.readMessage(socket.getInputStream())
+                            thread {
+                                Thread.sleep(10000)
+                                socket.close()
+                            }
+                            val rawData = BinaryUtils.readMessage(socket.getInputStream(), true)
                             val gameInformerData =
                                 Json.decodeFromString<GameInformerData>(rawData)
                             gameInformerData.ipAddress = ipAddress
                             listener.onResultFound(gameInformerData)
                         } catch (_: IOException) {
                         } finally {
-                            if (socket.isConnected) {
-                                println("Successful: $ipAddress:$port")
-                            } else {
-                                println("Failed: $ipAddress:$port")
-                            }
                             socket.close()
                             latch.countDown()
                             println("Remaining threads: ${latch.count}")
@@ -54,21 +53,12 @@ class GameSearcher(private val listener: ResultCollector) {
                     }
                 }
             }
-            try {
                 println("Latch is awaiting ${latch.count} threads.")
                 latch.await()
                 listener.onFinish()
                 println("Search ended.")
-            } catch (e: InterruptedException) {
-                println("Searcher stopped.")
-            }
         }
     }
-
-    fun stopScan() {
-        mainThread?.interrupt()
-    }
-
 
     interface ResultCollector {
         fun onSearchStarted()

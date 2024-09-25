@@ -19,7 +19,7 @@ class ScanGamesActivity : ComponentActivity() {
     lateinit var resultList: ViewGroup
     lateinit var scanningInProcessLabel: TextView
 
-    lateinit var gameSearcher: GameSearcher
+    private lateinit var gameSearcher: GameSearcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +45,6 @@ class ScanGamesActivity : ComponentActivity() {
                     val gameOffer = GameOfferView(this@ScanGamesActivity, data)
                     resultList.addView(gameOffer)
                     gameOffer.setOnClickListener {
-                        gameSearcher.stopScan()
                         val intent = Intent(this@ScanGamesActivity, JoinGameActivity::class.java)
                         val ipAddress = data.ipAddress
                         intent.putExtra(JoinGameActivity.IP_ADDRESS_KEY, ipAddress)
@@ -63,7 +62,6 @@ class ScanGamesActivity : ComponentActivity() {
         })
 
         startScanningButton.setOnClickListener {
-            stopScan()
             restartScan()
         }
 
@@ -85,12 +83,6 @@ class ScanGamesActivity : ComponentActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        stopScan()
-    }
-
     override fun onResume() {
         super.onResume()
 
@@ -99,9 +91,5 @@ class ScanGamesActivity : ComponentActivity() {
 
     private fun restartScan() {
         gameSearcher.scanForGames()
-    }
-
-    private fun stopScan() {
-        gameSearcher.stopScan()
     }
 }

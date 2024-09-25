@@ -13,11 +13,11 @@ class TestBoardRenderer : IBoardSource {
         val rookW0_0 = Rook(PlayerColor.White, board, Vector2D(0, 0))
         board.getTile(rookW0_0.location).piece = rookW0_0
 
-        val rookB3_4 = Rook(PlayerColor.Black, board, Vector2D(3, 4))
-        board.getTile(rookB3_4.location).piece = rookB3_4
+        val rookB0_7 = Rook(PlayerColor.Black, board, Vector2D(0, 7))
+        board.getTile(rookB0_7.location).piece = rookB0_7
 
-        val qweenW5_4 = Queen(PlayerColor.White, board, Vector2D(5, 4))
-        board.getTile(qweenW5_4.location).piece = qweenW5_4
+        val qweenW3_0 = Queen(PlayerColor.White, board, Vector2D(3, 0))
+        board.getTile(qweenW3_0.location).piece = qweenW3_0
 
         board.getTile(3,3).consistentTraversability = Tile.Traversability.Blocked
         board.getTile(2,3).consistentTraversability = Tile.Traversability.Peaceful

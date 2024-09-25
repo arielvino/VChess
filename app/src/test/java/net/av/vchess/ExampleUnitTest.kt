@@ -1,8 +1,9 @@
 package net.av.vchess
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import net.av.vchess.reusables.PlayerColor
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,6 +13,6 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+         println(Json.encodeToString(arrayOf(PlayerColor.Black, PlayerColor.White, PlayerColor.valueOf("null"), null)))
     }
 }
