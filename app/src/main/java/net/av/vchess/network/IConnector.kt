@@ -10,5 +10,7 @@ interface IConnector {
     fun send(message: String)
     fun receive(): String
     fun isConnected():Boolean
+    fun isAwaitingConnection():Boolean
+    fun start()
     fun stop()
 }

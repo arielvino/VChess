@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="tile_light">#ff9900</color>
-    <color name="tile_dark">#884400</color>
+    <color name="tile_light">#DEB887</color>
+    <color name="tile_dark">#8B3E2F</color>
     <color name="tile_blocked">#000000</color>
     <color name="tile_peaceful">#44cc44</color>
     <color name="tile_only_pass">#555555</color>

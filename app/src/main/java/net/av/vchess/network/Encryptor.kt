@@ -11,48 +11,69 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.concurrent.thread
 
 class Encryptor {
-    private var symmetricKey: String
+    private var symmetricKey: String? = null
     private var connector: IConnector
+    private val isHost: Boolean
+    private val listener: IListener
 
-    constructor(connector: HostConnector) {
+    constructor(listener: IListener, connector: HostConnector) {
         this.connector = connector
-        val keyPair: Pair<String, String> = RsaFactory.generateRSAKeyPair()
-        println("Key pair generated.")
-        connector.send(keyPair.first)
-        println("Public key sent.")
-        val encryptedKey = connector.receive()
-        println("Symmetric Key received.")
-        symmetricKey = RsaFactory.decryptWithPrivateKey(encryptedKey, keyPair.second)
-        println("Symmetric key decrypted and saved.")
+        isHost = true
+        this.listener = listener
     }
 
-    constructor(connector: ClientConnector) {
+    constructor(listener: IListener, connector: ClientConnector) {
         this.connector = connector
-        var publicKey:String
-        runBlocking {
-            publicKey= connector.receive()
+        isHost = false
+        this.listener = listener
+    }
+
+    fun start() {
+        thread {
+            if (isHost) {
+                val keyPair: Pair<String, String> = RsaFactory.generateRSAKeyPair()
+                println("Key pair generated.")
+                connector.send(keyPair.first)
+                println("Public key sent.")
+                val encryptedKey = connector.receive()
+                println("Symmetric Key received.")
+                symmetricKey = RsaFactory.decryptWithPrivateKey(encryptedKey, keyPair.second)
+                println("Symmetric key decrypted and saved.")
+                listener.onEncryptionEstablished()
+            } else {
+                var publicKey: String
+                runBlocking {
+                    publicKey = connector.receive()
+                }
+                println("Public key received.")
+                symmetricKey = AesFactory.generateAESKey()
+                println("Symmetric key generated.")
+                val encryptedKey = RsaFactory.encryptWithPublicKey(symmetricKey!!, publicKey)
+                runBlocking {
+                    connector.send(encryptedKey)
+                }
+                println("Symmetric key sent.")
+                listener.onEncryptionEstablished()
+            }
         }
-        println("Public key received.")
-        symmetricKey = AesFactory.generateAESKey()
-        println("Symmetric key generated.")
-        val encryptedKey = RsaFactory.encryptWithPublicKey(symmetricKey, publicKey)
-        runBlocking {
-            connector.send(encryptedKey)
-        }
-        println("Symmetric key sent.")
     }
 
     fun send(message: String) {
-        connector.send(AesFactory.encryptWithAESGCM(message, symmetricKey))
+        connector.send(AesFactory.encryptWithAESGCM(message, symmetricKey!!))
         println("Sent: $message")
     }
 
     fun receive(): String {
-        val message = AesFactory.decryptWithAESGCM(connector.receive(), symmetricKey)
+        val message = AesFactory.decryptWithAESGCM(connector.receive(), symmetricKey!!)
         println("Received: $message")
         return message
+    }
+
+    fun getSymmetricKey(): String? {
+        return symmetricKey
     }
 
     object RsaFactory {
@@ -141,9 +162,13 @@ class Encryptor {
             return String(decryptedBytes)
         }
 
-        fun decodeAESKeyFromString(keyString: String): SecretKey {
+        private fun decodeAESKeyFromString(keyString: String): SecretKey {
             val keyBytes = Base64.getDecoder().decode(keyString)
             return SecretKeySpec(keyBytes, "AES")
         }
+    }
+
+    interface IListener {
+        fun onEncryptionEstablished()
     }
 }

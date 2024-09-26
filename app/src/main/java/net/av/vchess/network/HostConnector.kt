@@ -1,17 +1,14 @@
 package net.av.vchess.network
 
-import java.io.InputStream
-import java.io.OutputStream
 import java.net.ServerSocket
 import java.net.Socket
 import kotlin.concurrent.thread
 
 class HostConnector(private val listener: IListener) : IConnector {
-    private var client: Socket? = null
-    private var inputStream: InputStream? = null
-    private var outputStream: OutputStream? = null
+    private var serverSocket: ServerSocket? = null
+    private var clientSocket: Socket? = null
 
-    init {
+    override fun start() {
         var serverSocket: ServerSocket? = null
         for (port in NetworkConfiguration.GamePorts) {
             try {
@@ -26,12 +23,10 @@ class HostConnector(private val listener: IListener) : IConnector {
         }
         thread {
             while (!isConnected()) {
-                client = serverSocket!!.accept()
+                clientSocket = serverSocket!!.accept()
                 var message: String
-                message = BinaryUtils.readMessage(client!!.getInputStream())
+                message = BinaryUtils.readMessage(clientSocket!!.getInputStream())
                 if (message.startsWith(IConnector.CONNECT_KEYWORD)) {
-                    inputStream = client!!.getInputStream()
-                    outputStream = client!!.getOutputStream()
                     send(IConnector.OK_KEYWORD)
                     println("Connection created.")
                     listener.onConnect(message.substring(message.indexOf(" ") + 1))
@@ -40,27 +35,33 @@ class HostConnector(private val listener: IListener) : IConnector {
         }
     }
 
+    override fun stop() {
+        clientSocket?.close()
+    }
+
     override fun sendAsync(message: String) {
-        BinaryUtils.sendMessage(outputStream!!, message)
+        thread {
+            send(message)
+        }
     }
 
     override fun send(message: String) {
-        BinaryUtils.sendMessage(outputStream!!, message)
+        BinaryUtils.sendMessage(clientSocket!!.getOutputStream(), message)
     }
 
     override fun receive(): String {
-        return BinaryUtils.readMessage(inputStream!!)
+        return BinaryUtils.readMessage(clientSocket!!.getInputStream())
     }
 
     override fun isConnected(): Boolean {
-        return outputStream != null
+        return clientSocket != null
     }
 
-    override fun stop() {
-        client?.close()
+    override fun isAwaitingConnection(): Boolean {
+        return serverSocket != null
     }
 
-    interface IListener{
-        fun onConnect(clientName:String)
+    interface IListener {
+        fun onConnect(clientName: String)
     }
 }

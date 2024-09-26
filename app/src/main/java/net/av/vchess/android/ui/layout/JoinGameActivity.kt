@@ -14,7 +14,6 @@ import net.av.vchess.io.XmlBordSource
 import net.av.vchess.network.ClientConnector
 import net.av.vchess.network.Encryptor
 import net.av.vchess.network.data.NetworkGameMetadata
-import kotlin.concurrent.thread
 
 class JoinGameActivity : ComponentActivity() {
     companion object {
@@ -26,6 +25,7 @@ class JoinGameActivity : ComponentActivity() {
 
     private var connector: ClientConnector? = null
     private lateinit var encryptor: Encryptor
+    private lateinit var game: ActualGame
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,28 +35,48 @@ class JoinGameActivity : ComponentActivity() {
         boardHolder = findViewById(R.id.board_holder)
         messageBox = findViewById(R.id.message_box)
 
-        val ipAddress = intent.getStringExtra(IP_ADDRESS_KEY)
+        startConnector()
+    }
 
-        thread {
-            val connector = ClientConnector(ipAddress!!, "Fabricated nick name.")
-            @Suppress("ControlFlowWithEmptyBody") while (!connector.isConnected());
-            messageBox.text = getString(R.string.encrypting)
-            encryptor = Encryptor(connector)
-            messageBox.text = getString(R.string.encryption_established)
-            val xmlBoardString = encryptor.receive()
-            val boardSource = XmlBordSource(xmlBoardString)
-            val networkGameMetadata: NetworkGameMetadata =
-                Json.decodeFromString(encryptor.receive())
-            var ruler: IGameRuler? = null
-            if (networkGameMetadata.rulerName.contentEquals("test")) {
-                ruler = TestRuler(boardSource, networkGameMetadata.currentTurn)
+    private fun startConnector() {
+        val ipAddress = intent.getStringExtra(IP_ADDRESS_KEY)
+        connector = ClientConnector(object : ClientConnector.IListener {
+            override fun onConnect() {
+                startEncryptor()
             }
-            val game = ActualGame(boardSource, networkGameMetadata.currentTurn, ruler!!)
-            val boardView = BoardView(this@JoinGameActivity, game.board, OnePlayerBoardViewModel(game, networkGameMetadata.yourColor))
-            runOnUiThread {
-                boardHolder.addView(boardView)
+
+        }, ipAddress!!, "Fabricated nick name.")
+        connector!!.start()
+    }
+
+    private fun startEncryptor() {
+        messageBox.text = getString(R.string.encrypting)
+        encryptor = Encryptor(object : Encryptor.IListener {
+            override fun onEncryptionEstablished() {
+                runOnUiThread {
+                    messageBox.text = getString(R.string.encryption_established)
+                    initGame()
+                }
             }
+        }, connector!!)
+        encryptor.start()
+    }
+
+    private fun initGame() {
+        val xmlBoardString = encryptor.receive()
+        val boardSource = XmlBordSource(xmlBoardString)
+        val networkGameMetadata: NetworkGameMetadata = Json.decodeFromString(encryptor.receive())
+        var ruler: IGameRuler? = null
+        if (networkGameMetadata.rulerName.contentEquals("test")) {
+            ruler = TestRuler(boardSource, networkGameMetadata.currentTurn)
         }
+        game = ActualGame(boardSource, networkGameMetadata.currentTurn, ruler!!)
+        val boardView = BoardView(
+            this@JoinGameActivity,
+            game.board,
+            OnePlayerBoardViewModel(game, networkGameMetadata.yourColor)
+        )
+        boardHolder.addView(boardView)
     }
 
     override fun onDestroy() {

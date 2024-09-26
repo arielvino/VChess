@@ -51,7 +51,7 @@ class HostGameDialog : ComponentActivity() {
         publishGameButton.setOnClickListener {
             if (validateParams()) {
                 val intent = Intent(this, HostGameActivity::class.java)
-                intent.putExtra(HostGameActivity.GAME_NAME_KEY, gameNameInput.text.toString())
+                intent.putExtra(HostGameActivity.LOBBY_NAME_KEY, gameNameInput.text.toString())
                 intent.putExtra(HostGameActivity.MY_COLOR_KEY, myColor.name)
                 startActivity(intent)
             }
