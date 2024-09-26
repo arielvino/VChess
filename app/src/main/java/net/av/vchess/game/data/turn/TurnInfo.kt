@@ -1,7 +1,9 @@
 package net.av.vchess.game.data.turn
 
+import kotlinx.serialization.Serializable
 import net.av.vchess.reusables.Vector2D
 
+@Serializable
 class TurnInfo(val originLocation: Vector2D) {
     val actions: ArrayList<IActionInfo> = arrayListOf()
 

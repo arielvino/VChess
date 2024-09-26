@@ -1,5 +1,6 @@
 package net.av.vchess.android.ui.layout
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -40,14 +41,20 @@ class TileView : FrameLayout, UnresponsiveTileViewModel.ChangesListener {
     }
 
     override fun onBorderColorChanged(colorId: Int) {
-        border.setBackgroundColor(context.getColor(colorId))
+        (context as Activity).runOnUiThread {
+            border.setBackgroundColor(context.getColor(colorId))
+        }
     }
 
     override fun onBodyColorChanged(colorId: Int) {
-        body.setBackgroundColor(context.getColor(colorId))
+        (context as Activity).runOnUiThread {
+            body.setBackgroundColor(context.getColor(colorId))
+        }
     }
 
     override fun onImageChanged(drawable: Drawable?) {
+        (context as Activity).runOnUiThread {
             body.setImageDrawable(drawable)
+        }
     }
 }

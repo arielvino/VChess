@@ -17,7 +17,15 @@ class LocalGameActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val game = ActualGame(TestBoardRenderer(), PlayerColor.White, TestRuler(TestBoardRenderer(), PlayerColor.White))
+        val game = ActualGame(object :ActualGame.IListener{
+            override fun onWin(color: PlayerColor) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTurnDone(color: PlayerColor, turnInfo: TurnInfo) {
+                TODO("Not yet implemented")
+            }
+        }, TestBoardRenderer(), PlayerColor.White, TestRuler(TestBoardRenderer(), PlayerColor.White))
 
         setContentView(R.layout.local_game_activity)
         findViewById<FrameLayout>(R.id.board_holder).addView(

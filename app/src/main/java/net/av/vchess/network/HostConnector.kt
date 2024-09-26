@@ -49,7 +49,7 @@ class HostConnector(private val listener: IListener) : IConnector {
         BinaryUtils.sendMessage(clientSocket!!.getOutputStream(), message)
     }
 
-    override fun receive(): String {
+    override fun receive(fast: Boolean): String {
         return BinaryUtils.readMessage(clientSocket!!.getInputStream())
     }
 

@@ -1,10 +1,15 @@
 package net.av.vchess.game.data.turn
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import net.av.vchess.game.data.GameRepresentation
 import net.av.vchess.game.data.Piece
 import net.av.vchess.reusables.Vector2D
 
+@Serializable
 class CaptureAction(val origin: Vector2D) : IActionInfo {
+
+    @Transient
     lateinit var piece: Piece
 
     override fun performAction(game: GameRepresentation) {

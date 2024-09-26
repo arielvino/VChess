@@ -1,8 +1,9 @@
 package net.av.vchess.reusables
 
+import kotlinx.serialization.Serializable
 import kotlin.math.abs
-import kotlin.reflect.typeOf
 
+@Serializable
 data class Vector2D(val x: Int, val y: Int) {
     override fun equals(other: Any?): Boolean {
         if (other is Vector2D) {

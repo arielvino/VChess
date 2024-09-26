@@ -10,10 +10,13 @@ import net.av.vchess.android.OnePlayerBoardViewModel
 import net.av.vchess.game.data.ActualGame
 import net.av.vchess.game.data.IGameRuler
 import net.av.vchess.game.data.Rulers.TestRuler
+import net.av.vchess.game.data.turn.TurnInfo
 import net.av.vchess.io.XmlBordSource
 import net.av.vchess.network.ClientConnector
 import net.av.vchess.network.Encryptor
+import net.av.vchess.network.NetworkGameManager
 import net.av.vchess.network.data.NetworkGameMetadata
+import net.av.vchess.reusables.PlayerColor
 
 class JoinGameActivity : ComponentActivity() {
     companion object {
@@ -25,6 +28,7 @@ class JoinGameActivity : ComponentActivity() {
 
     private var connector: ClientConnector? = null
     private lateinit var encryptor: Encryptor
+    private lateinit var networkGameManager: NetworkGameManager
     private lateinit var game: ActualGame
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,13 +74,41 @@ class JoinGameActivity : ComponentActivity() {
         if (networkGameMetadata.rulerName.contentEquals("test")) {
             ruler = TestRuler(boardSource, networkGameMetadata.currentTurn)
         }
-        game = ActualGame(boardSource, networkGameMetadata.currentTurn, ruler!!)
+        game = ActualGame(object : ActualGame.IListener {
+            override fun onTurnDone(color: PlayerColor, turnInfo: TurnInfo) {
+                if (color == networkGameMetadata.yourColor) networkGameManager.notifyTurn(turnInfo)
+            }
+
+            override fun onWin(color: PlayerColor) {
+                TODO("Not yet implemented")
+            }
+        }, boardSource, networkGameMetadata.currentTurn, ruler!!)
         val boardView = BoardView(
             this@JoinGameActivity,
             game.board,
             OnePlayerBoardViewModel(game, networkGameMetadata.yourColor)
         )
-        boardHolder.addView(boardView)
+
+        networkGameManager = NetworkGameManager(
+            object : NetworkGameManager.IListener {
+                override fun onActivated() {
+                    runOnUiThread {
+                        boardHolder.addView(boardView)
+                    }
+                }
+
+                override fun onTurnDone(turnInfo: TurnInfo) {
+                    if (true) { //todo: add checks
+                        game.performTurn(turnInfo)
+                    }
+                }
+
+                override fun onDisconnect() {
+                    TODO("Not yet implemented")
+                }
+            }, encryptor
+        )
+        networkGameManager.start()
     }
 
     override fun onDestroy() {

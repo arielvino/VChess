@@ -1,7 +1,5 @@
 package net.av.vchess.network
 
-import java.io.InputStream
-import java.io.OutputStream
 import java.net.Socket
 import kotlin.concurrent.thread
 
@@ -24,7 +22,7 @@ class ClientConnector(
         BinaryUtils.sendMessage(activeSocket!!.getOutputStream(), message)
     }
 
-    override fun receive(): String {
+    override fun receive(fast:Boolean): String {
         return BinaryUtils.readMessage(activeSocket!!.getInputStream())
     }
 

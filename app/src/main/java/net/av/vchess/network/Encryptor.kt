@@ -66,8 +66,8 @@ class Encryptor {
         println("Sent: $message")
     }
 
-    fun receive(): String {
-        val message = AesFactory.decryptWithAESGCM(connector.receive(), symmetricKey!!)
+    fun receive(fast: Boolean = false): String {
+        val message = AesFactory.decryptWithAESGCM(connector.receive(fast), symmetricKey!!)
         println("Received: $message")
         return message
     }
