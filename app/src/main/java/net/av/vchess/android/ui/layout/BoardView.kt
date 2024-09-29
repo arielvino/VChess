@@ -8,6 +8,7 @@ import androidx.core.view.setPadding
 import net.av.vchess.android.UnresponsiveBoardViewModel
 import net.av.vchess.android.UnresponsiveTileViewModel
 import net.av.vchess.game.data.Board
+import net.av.vchess.reusables.PlayerColor
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates
@@ -63,16 +64,34 @@ class BoardView(
                 for (x in 0.until(board.width)) {
                     for (y in 0.until(board.height)) {
                         val tile = tiles[x][y]
-                        val layoutParams = GridLayout.LayoutParams()
+                        val layoutParams = tile.layoutParams as GridLayout.LayoutParams
                         layoutParams.width = tileSize
                         layoutParams.height = tileSize
-                        layoutParams.rowSpec = GridLayout.spec(board.height - 1 - y)
-                        layoutParams.columnSpec = GridLayout.spec(x)
-                        tile.layoutParams = layoutParams
                         tile.setPadding((tileSize * 0.10).toInt())
                     }
                 }
             }
         })
     }
+
+    var pointOfView: PlayerColor = PlayerColor.White
+        get() {
+            return field
+        }
+        set(value) {
+            field = value
+            for (x in 0.until(board.width)) {
+                for (y in 0.until(board.height)) {
+                    val tile = tiles[x][y]
+                    val layoutParams = tile.layoutParams as GridLayout.LayoutParams
+                    if (field == PlayerColor.White) {
+                        layoutParams.rowSpec = GridLayout.spec(board.height - 1 - y)
+                        layoutParams.columnSpec = GridLayout.spec(x)
+                    } else {
+                        layoutParams.rowSpec = GridLayout.spec(y)
+                        layoutParams.columnSpec = GridLayout.spec(board.width - 1 - x)
+                    }
+                }
+            }
+        }
 }

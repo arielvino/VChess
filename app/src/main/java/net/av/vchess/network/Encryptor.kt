@@ -18,6 +18,10 @@ class Encryptor {
     private var connector: IConnector
     private val isHost: Boolean
     private val listener: IListener
+    val isActive: Boolean
+        get() {
+            return symmetricKey != null
+        }
 
     constructor(listener: IListener, connector: HostConnector) {
         this.connector = connector

@@ -88,6 +88,7 @@ class JoinGameActivity : ComponentActivity() {
             game.board,
             OnePlayerBoardViewModel(game, networkGameMetadata.yourColor)
         )
+        boardView.pointOfView = networkGameMetadata.yourColor
 
         networkGameManager = NetworkGameManager(
             object : NetworkGameManager.IListener {

@@ -122,6 +122,7 @@ class HostGameActivity : ComponentActivity() {
 
     private fun initGame() {
         boardView = BoardView(this, game.board, OnePlayerBoardViewModel(game, myColor))
+        boardView.pointOfView = myColor
         encryptor.send(XmlBoardParser.writeBoard(boardView.boardViewModel.board))
         encryptor.send(
             Json.encodeToString(
