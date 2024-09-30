@@ -1,4 +1,4 @@
-package net.av.vchess.android.ui.layout
+package net.av.vchess.android.lan
 
 import android.os.Bundle
 import android.view.ViewGroup
@@ -6,7 +6,8 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import kotlinx.serialization.json.Json
 import net.av.vchess.R
-import net.av.vchess.android.OnePlayerBoardViewModel
+import net.av.vchess.android.viewmodels.OnePlayerBoardViewModel
+import net.av.vchess.android.ui.layout.BoardView
 import net.av.vchess.game.data.ActualGame
 import net.av.vchess.game.data.IGameRuler
 import net.av.vchess.game.data.Rulers.TestRuler

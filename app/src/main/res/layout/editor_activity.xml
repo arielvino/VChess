@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/board_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/pieces_panel"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/pieces_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pieces:"
+                android:textAlignment="textStart"
+                android:textAllCaps="false" />
+
+            <GridLayout
+                android:id="@+id/pieces_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+            <ImageButton
+                android:id="@+id/color_selector"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:background="@color/purple_500"
+                android:contentDescription="Change color of available pieces."
+                android:scaleType="fitCenter"
+                android:src="@drawable/b_pawn" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/tile_properties_panel"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/tile_properties_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tile properties:"
+                android:textAlignment="textStart"
+                android:textAllCaps="false" />
+
+            <LinearLayout
+                android:id="@+id/tile_properties_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Traversability:"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_traversability"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkedButton="@id/radio_normal"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/radio_blocked"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Blocked" />
+
+                    <RadioButton
+                        android:id="@+id/radio_only_pass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Only Pass" />
+
+                    <RadioButton
+                        android:id="@+id/radio_peaceful"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Peaceful" />
+
+                    <RadioButton
+                        android:id="@+id/radio_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Normal" />
+
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/piece_properties_panel"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/piece_properties_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Piece properties:"
+                android:textAlignment="textStart"
+                android:textAllCaps="false" />
+
+            <LinearLayout
+                android:id="@+id/piece_properties"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:id="@+id/board_name"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="save board"
+            android:id="@+id/save_board_button"
+            android:background="@drawable/refresh_button_background"
+            />
+    </LinearLayout>
+</ScrollView>

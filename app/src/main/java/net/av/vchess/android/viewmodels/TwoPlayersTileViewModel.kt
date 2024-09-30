@@ -1,4 +1,4 @@
-package net.av.vchess.android
+package net.av.vchess.android.viewmodels
 
 import androidx.annotation.ColorRes
 import net.av.vchess.game.data.Tile
@@ -8,7 +8,8 @@ import net.av.vchess.game.data.turn.MoveAction
 import net.av.vchess.game.data.turn.TurnInfo
 
 
-open class TwoPlayersTileViewModel(tile: Tile, override val board: TwoPlayersBoardViewModel) :UnresponsiveTileViewModel(tile, board) {
+open class TwoPlayersTileViewModel(tile: Tile, override val board: TwoPlayersBoardViewModel) :
+    UnresponsiveTileViewModel(tile, board) {
 
     val turnsInfo: ArrayList<TurnInfo> = arrayListOf()
 

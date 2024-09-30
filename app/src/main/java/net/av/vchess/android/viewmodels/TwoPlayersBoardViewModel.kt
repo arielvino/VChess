@@ -1,4 +1,4 @@
-package net.av.vchess.android
+package net.av.vchess.android.viewmodels
 
 import net.av.vchess.game.data.ActualGame
 

@@ -1,4 +1,4 @@
-package net.av.vchess.android.ui.layout
+package net.av.vchess.android.lan
 
 import android.content.Context
 import android.view.ViewGroup

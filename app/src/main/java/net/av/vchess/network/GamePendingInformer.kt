@@ -2,13 +2,13 @@ package net.av.vchess.network
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
-import net.av.vchess.android.ui.layout.HostGameDialog
+import net.av.vchess.android.lan.HostGameDialog
 import net.av.vchess.network.data.GameInformerData
 import java.net.ServerSocket
 import java.net.Socket
 import kotlin.concurrent.thread
 
-class GamePendingInformer(private val gameName: String, private val recipientColor:HostGameDialog.MyColorSetting = HostGameDialog.MyColorSetting.Random) {
+class GamePendingInformer(private val gameName: String, private val recipientColor: HostGameDialog.MyColorSetting = HostGameDialog.MyColorSetting.Random) {
     companion object{
         const val PING_KEYWORD = "VCHESS_PING"
     }

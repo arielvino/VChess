@@ -18,4 +18,6 @@
     <string name="black">black</string>
     <string name="random">random</string>
     <string name="white">white</string>
+    <string name="title_activity_editor">EditorActivity</string>
+    <string name="title_activity_main_menu">MainMenuActivity</string>
 </resources>

@@ -1,9 +1,10 @@
-package net.av.vchess.android
+package net.av.vchess.android.viewmodels
 
 import net.av.vchess.game.data.ActualGame
 import net.av.vchess.reusables.PlayerColor
 
-class OnePlayerBoardViewModel(game: ActualGame, private  val belongsTo:PlayerColor):TwoPlayersBoardViewModel(game) {
+class OnePlayerBoardViewModel(game: ActualGame, private  val belongsTo:PlayerColor):
+    TwoPlayersBoardViewModel(game) {
 
     init {
         createBoard()

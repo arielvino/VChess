@@ -1,16 +1,16 @@
 package net.av.vchess.android.ui.layout
 
 import android.content.Context
+import android.content.res.Configuration
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import androidx.core.view.setPadding
-import net.av.vchess.android.UnresponsiveBoardViewModel
-import net.av.vchess.android.UnresponsiveTileViewModel
+import net.av.vchess.android.viewmodels.UnresponsiveBoardViewModel
+import net.av.vchess.android.viewmodels.UnresponsiveTileViewModel
 import net.av.vchess.game.data.Board
 import net.av.vchess.reusables.PlayerColor
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.properties.Delegates
 
 class BoardView(
@@ -57,9 +57,17 @@ class BoardView(
             override fun onGlobalLayout() {
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                val boardWidth = min(width, height)
+                val boardSize: Int
+                val orientation = resources.configuration.orientation
+
+                boardSize = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    width
+                } else {
+                    height
+                }
+
                 val numberOfCells = max(board.height, board.width)
-                tileSize = boardWidth / numberOfCells
+                tileSize = boardSize / numberOfCells
 
                 for (x in 0.until(board.width)) {
                     for (y in 0.until(board.height)) {
@@ -75,9 +83,6 @@ class BoardView(
     }
 
     var pointOfView: PlayerColor = PlayerColor.White
-        get() {
-            return field
-        }
         set(value) {
             field = value
             for (x in 0.until(board.width)) {
