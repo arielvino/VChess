@@ -20,4 +20,5 @@
     <string name="white">white</string>
     <string name="title_activity_editor">EditorActivity</string>
     <string name="title_activity_main_menu">MainMenuActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

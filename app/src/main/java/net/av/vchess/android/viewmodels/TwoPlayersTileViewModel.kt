@@ -55,7 +55,7 @@ open class TwoPlayersTileViewModel(tile: Tile, override val board: TwoPlayersBoa
             board.selectedTile = this
 
             //TEST
-            val turns = board.game.gameRuler.getLegalTurnsFrom(tile.piece!!.listUnfilteredPossibleTurns())
+            val turns = board.game.gameRuler.getLegalTurnsFrom(tile.piece!!.listUnfilteredPossibleTurns(board.board))
             for (turn in turns) {
                 for (action in turn.actions) {
                     if (action is MoveAction) {

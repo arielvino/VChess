@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import net.av.vchess.reusables.Vector2D
 
 @Serializable
-class TurnInfo(val originLocation: Vector2D) {
+class TurnInfo(val targetLocation: Vector2D) {
     val actions: ArrayList<IActionInfo> = arrayListOf()
 
     fun addAction(action: IActionInfo) {
@@ -12,7 +12,7 @@ class TurnInfo(val originLocation: Vector2D) {
     }
 
     fun clone(): TurnInfo {
-        val copy = TurnInfo(originLocation)
+        val copy = TurnInfo(targetLocation)
 
         for(action in actions){
             copy.addAction(action)

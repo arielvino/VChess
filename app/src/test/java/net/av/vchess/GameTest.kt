@@ -12,7 +12,7 @@ class GameTest {
         //define board:
         val board = game.board
 
-        val turns = game.white.pieces[index].listUnfilteredPossibleTurns()
+        val turns = game.white.pieces[index].listUnfilteredPossibleTurns(board)
         val validPlaces: ArrayList<Vector2D> = arrayListOf()
         for (turn in turns) {
             for (action in turn.actions) {
@@ -43,7 +43,4 @@ class GameTest {
         print("\n")
     }
 
-    @Test
-    fun checkMultiSteps(type:Class<Piece>) {
-    }
 }

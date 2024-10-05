@@ -35,14 +35,5 @@ class LocalGameActivity : ComponentActivity() {
                 TwoPlayersBoardViewModel(game)
             )
         )
-
-        //test:
-        val turn = TurnInfo(Vector2D(0, 0))
-        turn.actions.add(
-            MoveAction(
-                Vector2D(0, 0),
-                Vector2D(0, 4)
-            )
-        )
     }
 }

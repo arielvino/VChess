@@ -9,12 +9,12 @@ import net.av.vchess.game.data.turn.TurnInfo
 import net.av.vchess.reusables.PlayerColor
 import net.av.vchess.reusables.Vector2D
 
-abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, stepsCounter: Int) :
-    Piece(color, board, location, stepsCounter) {
+abstract class Rider(color: PlayerColor, location: Vector2D, stepsCounter: Int) :
+    Piece(color, location, stepsCounter) {
 
     abstract val steps: List<Vector2D>
 
-    override fun listUnfilteredPossibleTurns(): ArrayList<TurnInfo> {
+    override fun listUnfilteredPossibleTurns(board: Board): ArrayList<TurnInfo> {
         val turns: ArrayList<TurnInfo> = arrayListOf()
 
         //if the piece is immobile:
@@ -32,8 +32,8 @@ abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, steps
                 if (piece == null) {
                     //if tile rule allow landing:
                     if(tile.ruledTraversability == Tile.Traversability.Normal || tile.ruledTraversability == Tile.Traversability.Peaceful) {
-                        val action: MoveAction = MoveAction(location, testedLocation)
-                        val turn: TurnInfo = TurnInfo(location)
+                        val action = MoveAction(location, testedLocation)
+                        val turn = TurnInfo(testedLocation)
                         turn.addAction(action)
                         turns.add(turn)
                     }
@@ -60,7 +60,7 @@ abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, steps
                                     )
                                 val moveAction =
                                     MoveAction(location, testedLocation)
-                                val turn = TurnInfo(location)
+                                val turn = TurnInfo(testedLocation)
                                 turn.addAction(captureAction)
                                 turn.addAction(moveAction)
                                 turns.add(turn)
@@ -77,7 +77,7 @@ abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, steps
         return turns
     }
 
-    override fun isThreateningTile(location: Vector2D): Boolean {
+    override fun isThreateningTile(location: Vector2D, board: Board): Boolean {
         if(!canCapture){
             return false
         }
