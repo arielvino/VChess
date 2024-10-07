@@ -1,5 +1,6 @@
 package net.av.vchess.game.data
 
+import net.av.vchess.game.data.pieces.Piece
 import net.av.vchess.reusables.Vector2D
 
 class Tile(val location: Vector2D) {
@@ -37,13 +38,13 @@ class Tile(val location: Vector2D) {
         changesListeners.add(listener)
     }
 
-    fun invokeTraversabilityChanged(){
+    private fun invokeTraversabilityChanged(){
         for(listener in changesListeners){
             listener.onTraversabilityChanged()
         }
     }
 
-    fun invokePieceChanged(){
+    private fun invokePieceChanged(){
         for(listener in changesListeners){
             listener.onPieceChanged()
         }

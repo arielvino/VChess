@@ -1,10 +1,8 @@
 package net.av.vchess
 
 import net.av.vchess.game.data.GameRepresentation
-import net.av.vchess.game.data.Piece
 import net.av.vchess.game.data.turn.MoveAction
 import net.av.vchess.reusables.Vector2D
-import org.junit.Test
 
 class GameTest {
 
@@ -12,7 +10,7 @@ class GameTest {
         //define board:
         val board = game.board
 
-        val turns = game.white.pieces[index].listUnfilteredPossibleTurns()
+        val turns = game.white.pieces[index].listUnfilteredPossibleTurns(board)
         val validPlaces: ArrayList<Vector2D> = arrayListOf()
         for (turn in turns) {
             for (action in turn.actions) {
@@ -43,7 +41,4 @@ class GameTest {
         print("\n")
     }
 
-    @Test
-    fun checkMultiSteps(type:Class<Piece>) {
-    }
 }

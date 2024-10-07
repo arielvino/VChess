@@ -1,7 +1,6 @@
 package net.av.vchess.game.data
 
-import net.av.vchess.game.data.turn.CaptureAction
-import net.av.vchess.game.data.turn.MoveAction
+import net.av.vchess.game.data.pieces.Piece
 import net.av.vchess.game.data.turn.TurnInfo
 import net.av.vchess.io.IBoardSource
 import net.av.vchess.reusables.PlayerColor

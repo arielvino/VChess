@@ -1,10 +1,23 @@
 package net.av.vchess.reusables
 
+import android.nfc.FormatException
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
 
 @Serializable
 data class Vector2D(val x: Int, val y: Int) {
+    companion object{
+        fun fromString(str:String):Vector2D{
+            try {
+                val x = str.substring(1, str.indexOf(",")).toInt()
+                val y = str.substring(str.indexOf(",") + 2, str.indexOf("}")).toInt()
+                return Vector2D(x, y)
+            }
+            catch (e:Exception){
+                throw IllegalArgumentException("Vector is not formatted correctly.")
+            }
+        }
+    }
     override fun equals(other: Any?): Boolean {
         if (other is Vector2D) {
             return x == other.x && y == other.y

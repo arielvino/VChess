@@ -1,32 +1,20 @@
-package net.av.vchess.game.data
+package net.av.vchess.game.data.pieces
 
+import net.av.vchess.game.data.Board
 import net.av.vchess.game.data.turn.TurnInfo
 import net.av.vchess.reusables.PlayerColor
 import net.av.vchess.reusables.Vector2D
 
-abstract class Piece(
-    val color: PlayerColor,
-    val board: Board,
-    location: Vector2D,
-    var stepsCounter: Int
-) {
-    var location: Vector2D = location
-        get() {
-            return field
-        }
-        set(value) {
-            if (board.hasTile(value)) {
-                field = value
-            } else {
-                throw IndexOutOfBoundsException("Location is out of the board.")
-            }
-        }
+abstract class Piece {
+    abstract val color: PlayerColor
+    abstract var location: Vector2D
+    abstract var stepsCounter: Int
     abstract val capturable: Boolean
     abstract val canCapture: Boolean
     abstract var consistentMobility: Mobility
     abstract var ruledMobility: Mobility
 
-    abstract fun listUnfilteredPossibleTurns(): ArrayList<TurnInfo>
+    abstract fun listUnfilteredPossibleTurns(board: Board): ArrayList<TurnInfo>
 
     /**
      * This method return true if and only if this piece can capture an enemy piece standing in the requested tile.
@@ -34,15 +22,19 @@ abstract class Piece(
      * @param location - the coordinates of the tile to check.
      * @return - true if the piece can hit someone who stand there.
      */
-    abstract fun isThreateningTile(location: Vector2D): Boolean
+    abstract fun isThreateningTile(location: Vector2D, board: Board): Boolean
 
-    fun resetRules(){
+    fun resetRules() {
         ruledMobility = consistentMobility
     }
 
-    fun forceRules(){}
+    fun forceRules() {}
 
-    enum class Mobility{
+    override fun toString(): String {
+        return "{type: ${this::class.java.simpleName}, color: ${color.name}, location: $location, consistentMobility: ${consistentMobility.name}, mobility: ${ruledMobility.name}, steps: $stepsCounter}"
+    }
+
+    enum class Mobility {
         Normal,
         Frozen
     }

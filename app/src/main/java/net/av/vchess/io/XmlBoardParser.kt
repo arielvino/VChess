@@ -1,7 +1,7 @@
 package net.av.vchess.io
 
 import net.av.vchess.game.data.Board
-import net.av.vchess.game.data.Piece
+import net.av.vchess.game.data.pieces.Piece
 import net.av.vchess.game.data.Tile
 import net.av.vchess.reusables.PlayerColor
 import net.av.vchess.reusables.Vector2D
@@ -37,7 +37,7 @@ object XmlBoardParser : IBoardParser {
             val steps = pieceElement.getAttribute("steps").toInt()
             val location = Vector2D(pieceElement.getAttribute("location").split(",")[0].toInt(), pieceElement.getAttribute("location").split(",")[1].toInt())
 
-            val piece = Class.forName(className).constructors.first().newInstance(color, board, location, steps) as Piece
+            val piece = Class.forName(className).constructors.first().newInstance(color, location, steps) as Piece
             piece.consistentMobility = Piece.Mobility.valueOf(pieceElement.getAttribute("mobility"))
             board.getTile(location).piece = piece
         }

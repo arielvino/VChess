@@ -1,17 +1,13 @@
 package net.av.vchess.game.data.pieces
 
-import net.av.vchess.game.data.Board
-import net.av.vchess.game.data.Piece
-import net.av.vchess.game.data.turn.TurnInfo
 import net.av.vchess.reusables.PlayerColor
 import net.av.vchess.reusables.Vector2D
 
 class Rook(
-    color: PlayerColor,
-    board: Board,
-    location: Vector2D,
-    stepsCounter: Int = 0
-) : Rider(color, board, location, stepsCounter) {
+    override val color: PlayerColor,
+    override var location: Vector2D,
+    override var stepsCounter: Int = 0
+) : Rider() {
     override val canCapture: Boolean = true
     override var consistentMobility: Mobility = Mobility.Normal
     override var ruledMobility: Mobility = consistentMobility

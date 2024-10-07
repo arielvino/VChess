@@ -20,48 +20,9 @@
         android:theme="@style/Theme.VChess"
         tools:targetApi="31">
         <activity
-            android:name=".android.MainMenuActivity"
-            android:exported="false"
-            android:label="@string/title_activity_main_menu"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.ui.layout.EditorActivity"
-            android:exported="false"
-            android:label="@string/title_activity_editor"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.lan.JoinGameActivity"
-            android:exported="false"
-            android:label="@string/title_activity_join_game"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.lan.HostGameActivity"
-            android:exported="false"
-            android:label="@string/title_activity_host_game"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.lan.ScanGamesActivity"
-            android:exported="false"
-            android:label="@string/title_activity_scan_games"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.lan.HostGameDialog"
-            android:exported="false"
-            android:label="@string/title_activity_host_game_dialog"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.lan.PlayLanActivity"
-            android:exported="false"
-            android:label="@string/title_activity_play_lan"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.ui.layout.LocalGameActivity"
-            android:exported="false"
-            android:label="@string/title_activity_local_game"
-            android:theme="@style/Theme.VChess" />
-        <activity
-            android:name=".android.ui.layout.MainActivity"
+            android:name=".android.compose.MainActivity"
             android:exported="true"
+            android:label="@string/title_activity_main"
             android:theme="@style/Theme.VChess">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,6 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".android.ui.layout.EditorActivity"
+            android:exported="false"
+            android:label="@string/title_activity_editor"
+            android:theme="@style/Theme.VChess" />
     </application>
 
 </manifest>

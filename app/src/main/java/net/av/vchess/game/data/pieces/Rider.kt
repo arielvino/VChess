@@ -1,25 +1,23 @@
 package net.av.vchess.game.data.pieces
 
 import net.av.vchess.game.data.Board
-import net.av.vchess.game.data.Piece
 import net.av.vchess.game.data.Tile
 import net.av.vchess.game.data.turn.MoveAction
 import net.av.vchess.game.data.turn.CaptureAction
 import net.av.vchess.game.data.turn.TurnInfo
-import net.av.vchess.reusables.PlayerColor
 import net.av.vchess.reusables.Vector2D
 
-abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, stepsCounter: Int) :
-    Piece(color, board, location, stepsCounter) {
+abstract class Rider :
+    Piece() {
 
     abstract val steps: List<Vector2D>
 
-    override fun listUnfilteredPossibleTurns(): ArrayList<TurnInfo> {
+    override fun listUnfilteredPossibleTurns(board: Board): ArrayList<TurnInfo> {
         val turns: ArrayList<TurnInfo> = arrayListOf()
 
         //if the piece is immobile:
-        if(ruledMobility == Mobility.Frozen){
-            return  turns
+        if (ruledMobility == Mobility.Frozen) {
+            return turns
         }
 
         for (step in steps) {
@@ -27,22 +25,21 @@ abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, steps
 
             while (board.hasTile(testedLocation)) {
                 //move to an empty tile:
-                val tile:Tile = board.getTile(testedLocation)
+                val tile: Tile = board.getTile(testedLocation)
                 val piece: Piece? = tile.piece
                 if (piece == null) {
                     //if tile rule allow landing:
-                    if(tile.ruledTraversability == Tile.Traversability.Normal || tile.ruledTraversability == Tile.Traversability.Peaceful) {
-                        val action: MoveAction = MoveAction(location, testedLocation)
-                        val turn: TurnInfo = TurnInfo(location)
+                    if (tile.ruledTraversability == Tile.Traversability.Normal || tile.ruledTraversability == Tile.Traversability.Peaceful) {
+                        val action = MoveAction(location, testedLocation)
+                        val turn = TurnInfo(testedLocation)
                         turn.addAction(action)
                         turns.add(turn)
                     }
                     //if tile rule allow passing:
-                    if(tile.ruledTraversability == Tile.Traversability.Normal || tile.ruledTraversability == Tile.Traversability.Peaceful || tile.ruledTraversability == Tile.Traversability.OnlyPass) {
+                    if (tile.ruledTraversability == Tile.Traversability.Normal || tile.ruledTraversability == Tile.Traversability.Peaceful || tile.ruledTraversability == Tile.Traversability.OnlyPass) {
                         //continue in the same direction:
                         testedLocation += step
-                    }
-                    else{
+                    } else {
                         //if you can not pass further - stop advancing in that direction:
                         break
                     }
@@ -53,14 +50,14 @@ abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, steps
                     if (piece.color != color) {
                         //capture:
                         if (piece.capturable) {
-                            if(tile.ruledTraversability == Tile.Traversability.Normal) {
+                            if (tile.ruledTraversability == Tile.Traversability.Normal) {
                                 val captureAction =
                                     CaptureAction(
                                         testedLocation
                                     )
                                 val moveAction =
                                     MoveAction(location, testedLocation)
-                                val turn = TurnInfo(location)
+                                val turn = TurnInfo(testedLocation)
                                 turn.addAction(captureAction)
                                 turn.addAction(moveAction)
                                 turns.add(turn)
@@ -77,14 +74,14 @@ abstract class Rider(color: PlayerColor, board: Board, location: Vector2D, steps
         return turns
     }
 
-    override fun isThreateningTile(location: Vector2D): Boolean {
-        if(!canCapture){
+    override fun isThreateningTile(location: Vector2D, board: Board): Boolean {
+        if (!canCapture) {
             return false
         }
-        if(board.getTile(location).ruledTraversability != Tile.Traversability.Normal){
+        if (board.getTile(location).ruledTraversability != Tile.Traversability.Normal) {
             return false
         }
-        if(ruledMobility == Mobility.Frozen){
+        if (ruledMobility == Mobility.Frozen) {
             return false
         }
 
