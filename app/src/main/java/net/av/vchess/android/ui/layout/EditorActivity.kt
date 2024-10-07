@@ -160,7 +160,7 @@ class EditorActivity : ComponentActivity(), EditorBoardViewModel.IListener {
                     val location = selectedLocation
 
                     val piece = Class.forName(pieces[i].name).constructors.first()
-                        .newInstance(color, board, location, steps) as Piece
+                        .newInstance(color, location, steps) as Piece
                     board.getTile(selectedLocation!!).piece = piece
                     refreshProperties()
                 }
