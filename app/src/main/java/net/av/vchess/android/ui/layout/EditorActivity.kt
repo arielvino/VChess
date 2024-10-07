@@ -17,7 +17,7 @@ import net.av.vchess.R
 import net.av.vchess.android.viewmodels.EditorBoardViewModel
 import net.av.vchess.android.viewmodels.UnresponsiveTileViewModel
 import net.av.vchess.game.data.Board
-import net.av.vchess.game.data.Piece
+import net.av.vchess.game.data.pieces.Piece
 import net.av.vchess.game.data.Tile
 import net.av.vchess.game.data.pieces.Pieces
 import net.av.vchess.io.BoardIO

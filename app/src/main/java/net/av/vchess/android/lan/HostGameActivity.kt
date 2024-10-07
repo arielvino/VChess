@@ -18,6 +18,7 @@ import net.av.vchess.network.Encryptor
 import net.av.vchess.network.GamePendingInformer
 import net.av.vchess.network.HostConnector
 import net.av.vchess.network.NetworkGameManager
+import net.av.vchess.network.data.GameInformerData
 import net.av.vchess.network.data.NetworkGameMetadata
 import net.av.vchess.reusables.PlayerColor
 import java.security.SecureRandom
@@ -55,11 +56,11 @@ class HostGameActivity : ComponentActivity() {
 
 
         val myClearColor =
-            HostGameDialog.MyColorSetting.valueOf(intent.getStringExtra(MY_COLOR_KEY)!!)
-        val recipientClearColor: HostGameDialog.MyColorSetting = when (myClearColor) {
-            HostGameDialog.MyColorSetting.Random -> HostGameDialog.MyColorSetting.Random
-            HostGameDialog.MyColorSetting.Black -> HostGameDialog.MyColorSetting.White
-            HostGameDialog.MyColorSetting.White -> HostGameDialog.MyColorSetting.Black
+            GameInformerData.MyColorSetting.valueOf(intent.getStringExtra(MY_COLOR_KEY)!!)
+        val recipientClearColor: GameInformerData.MyColorSetting = when (myClearColor) {
+            GameInformerData.MyColorSetting.Random -> GameInformerData.MyColorSetting.Random
+            GameInformerData.MyColorSetting.Black -> GameInformerData.MyColorSetting.White
+            GameInformerData.MyColorSetting.White -> GameInformerData.MyColorSetting.Black
         }
         informer = GamePendingInformer(lobbyName, recipientClearColor)
         informer!!.start()
@@ -83,9 +84,9 @@ class HostGameActivity : ComponentActivity() {
             TestRuler(TestBoardRenderer(), PlayerColor.White)
         )
         rivalColor = when (recipientClearColor) {
-            HostGameDialog.MyColorSetting.Black -> PlayerColor.Black
-            HostGameDialog.MyColorSetting.White -> PlayerColor.White
-            HostGameDialog.MyColorSetting.Random -> {
+            GameInformerData.MyColorSetting.Black -> PlayerColor.Black
+            GameInformerData.MyColorSetting.White -> PlayerColor.White
+            GameInformerData.MyColorSetting.Random -> {
                 if (SecureRandom().nextInt() % 2 == 0) PlayerColor.Black else PlayerColor.White
             }
         }

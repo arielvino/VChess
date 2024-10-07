@@ -31,13 +31,13 @@ class GameOfferView(private val context: Context, data: GameInformerData) : Fram
         colorLabel.setOnClickListener { performClick() }
         colorLabel.scaleType = ImageView.ScaleType.CENTER_INSIDE
         when (data.recipientColor) {
-            HostGameDialog.MyColorSetting.White ->
+            GameInformerData.MyColorSetting.White ->
                 colorLabel.setImageResource(R.drawable.w_pawn)
 
-            HostGameDialog.MyColorSetting.Black ->
+            GameInformerData.MyColorSetting.Black ->
                 colorLabel.setImageResource(R.drawable.b_pawn)
 
-            HostGameDialog.MyColorSetting.Random ->
+            GameInformerData.MyColorSetting.Random ->
                 colorLabel.setImageResource(R.drawable.random_symbol)
         }
         colorLabel.layoutParams = LinearLayout.LayoutParams(mmToPx(10f), mmToPx(10f))

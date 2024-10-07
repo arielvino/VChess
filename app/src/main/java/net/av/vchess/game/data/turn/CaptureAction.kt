@@ -3,7 +3,7 @@ package net.av.vchess.game.data.turn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.av.vchess.game.data.GameRepresentation
-import net.av.vchess.game.data.Piece
+import net.av.vchess.game.data.pieces.Piece
 import net.av.vchess.reusables.Vector2D
 
 @Serializable

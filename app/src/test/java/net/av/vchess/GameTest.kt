@@ -1,10 +1,8 @@
 package net.av.vchess
 
 import net.av.vchess.game.data.GameRepresentation
-import net.av.vchess.game.data.Piece
 import net.av.vchess.game.data.turn.MoveAction
 import net.av.vchess.reusables.Vector2D
-import org.junit.Test
 
 class GameTest {
 

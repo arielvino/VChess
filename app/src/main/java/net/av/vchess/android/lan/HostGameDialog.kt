@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.ComponentActivity
 import net.av.vchess.R
+import net.av.vchess.network.data.GameInformerData
 
 class HostGameDialog : ComponentActivity() {
     private lateinit var gameNameInput: EditText
@@ -15,7 +16,7 @@ class HostGameDialog : ComponentActivity() {
     private lateinit var whiteButton: ImageButton
     private lateinit var randomButton: ImageButton
 
-    private var myColor: MyColorSetting = MyColorSetting.Random
+    private var myColor: GameInformerData.MyColorSetting = GameInformerData.MyColorSetting.Random
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,21 +32,21 @@ class HostGameDialog : ComponentActivity() {
             whiteButton.setBackgroundColor(getColor(R.color.purple_500))
             blackButton.setBackgroundColor(getColor(R.color.gray_600))
             randomButton.setBackgroundColor(getColor(R.color.gray_600))
-            myColor = MyColorSetting.White
+            myColor = GameInformerData.MyColorSetting.White
         }
 
         blackButton.setOnClickListener {
             whiteButton.setBackgroundColor(getColor(R.color.gray_600))
             blackButton.setBackgroundColor(getColor(R.color.purple_500))
             randomButton.setBackgroundColor(getColor(R.color.gray_600))
-            myColor = MyColorSetting.Black
+            myColor = GameInformerData.MyColorSetting.Black
         }
 
         randomButton.setOnClickListener {
             whiteButton.setBackgroundColor(getColor(R.color.gray_600))
             blackButton.setBackgroundColor(getColor(R.color.gray_600))
             randomButton.setBackgroundColor(getColor(R.color.purple_500))
-            myColor = MyColorSetting.Random
+            myColor = GameInformerData.MyColorSetting.Random
         }
 
         publishGameButton.setOnClickListener {
@@ -64,8 +65,5 @@ class HostGameDialog : ComponentActivity() {
 
     private fun validateParams(): Boolean {
         return isLegalName()
-    }
-    enum class MyColorSetting{
-        Black, White, Random
     }
 }

@@ -2,7 +2,6 @@ package net.av.vchess.game.data
 
 import net.av.vchess.reusables.Vector2D
 
-
 class Board(val width: Int, val height: Int) {
     private var tiles: ArrayList<ArrayList<Tile>> = arrayListOf()
 

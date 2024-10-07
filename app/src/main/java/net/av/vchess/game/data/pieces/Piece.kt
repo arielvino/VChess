@@ -1,18 +1,14 @@
-package net.av.vchess.game.data
+package net.av.vchess.game.data.pieces
 
-import android.os.Parcel
-import android.os.Parcelable
-import kotlinx.serialization.Serializable
+import net.av.vchess.game.data.Board
 import net.av.vchess.game.data.turn.TurnInfo
 import net.av.vchess.reusables.PlayerColor
 import net.av.vchess.reusables.Vector2D
 
-abstract class Piece(
-    open val color: PlayerColor,
-    open var location: Vector2D,
-    open var stepsCounter: Int
-) {
-
+abstract class Piece {
+    abstract val color: PlayerColor
+    abstract var location: Vector2D
+    abstract var stepsCounter: Int
     abstract val capturable: Boolean
     abstract val canCapture: Boolean
     abstract var consistentMobility: Mobility
@@ -28,17 +24,17 @@ abstract class Piece(
      */
     abstract fun isThreateningTile(location: Vector2D, board: Board): Boolean
 
-    fun resetRules(){
+    fun resetRules() {
         ruledMobility = consistentMobility
     }
 
-    fun forceRules(){}
+    fun forceRules() {}
 
-    override fun toString():String{
+    override fun toString(): String {
         return "{type: ${this::class.java.simpleName}, color: ${color.name}, location: $location, consistentMobility: ${consistentMobility.name}, mobility: ${ruledMobility.name}, steps: $stepsCounter}"
     }
 
-    enum class Mobility{
+    enum class Mobility {
         Normal,
         Frozen
     }
