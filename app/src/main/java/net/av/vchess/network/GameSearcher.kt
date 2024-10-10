@@ -2,6 +2,7 @@ package net.av.vchess.network
 
 import kotlinx.serialization.json.Json
 import net.av.vchess.network.data.GameInformerData
+import net.av.vchess.network.data.GameOfferData
 import java.io.IOException
 import java.net.Socket
 import java.net.InetSocketAddress
@@ -39,11 +40,10 @@ class GameSearcher(private val listener: ResultCollector) {
                                 Thread.sleep(10000)
                                 socket.close()
                             }
-                            val rawData = BinaryUtils.readMessage(socket.getInputStream(), true)
+                            val rawData = BinaryUtils.readMessage(socket.getInputStream())
                             val gameInformerData =
                                 Json.decodeFromString<GameInformerData>(rawData)
-                            gameInformerData.ipAddress = ipAddress
-                            listener.onResultFound(gameInformerData)
+                            listener.onResultFound(GameOfferData(ipAddress, gameInformerData.lobbyName, gameInformerData.recipientColor))
                         } catch (_: IOException) {
                         } finally {
                             socket.close()
@@ -62,7 +62,7 @@ class GameSearcher(private val listener: ResultCollector) {
 
     interface ResultCollector {
         fun onSearchStarted()
-        fun onResultFound(data: GameInformerData)
+        fun onResultFound(data: GameOfferData)
         fun onFinish()
     }
 }

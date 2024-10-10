@@ -1,6 +1,7 @@
 package net.av.vchess.network
 
 import kotlinx.coroutines.runBlocking
+import net.av.vchess.android.App
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
 import java.security.PublicKey
@@ -38,7 +39,7 @@ class Encryptor {
     fun start() {
         thread {
             if (isHost) {
-                val keyPair: Pair<String, String> = RsaFactory.generateRSAKeyPair()
+                val keyPair = App.keyPair
                 println("Key pair generated.")
                 connector.send(keyPair.first)
                 println("Public key sent.")
