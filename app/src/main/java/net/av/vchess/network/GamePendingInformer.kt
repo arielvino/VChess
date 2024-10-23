@@ -7,7 +7,7 @@ import java.net.ServerSocket
 import java.net.Socket
 import kotlin.concurrent.thread
 
-class GamePendingInformer(private val gameName: String, private val recipientColor: GameInformerData.MyColorSetting = GameInformerData.MyColorSetting.Random) {
+class GamePendingInformer(val data: GameInformerData) {
     companion object{
         const val PING_KEYWORD = "VCHESS_PING"
     }
@@ -39,7 +39,7 @@ class GamePendingInformer(private val gameName: String, private val recipientCol
                     val message = BinaryUtils.readMessage(clientSocket.getInputStream())
                     if (message.contentEquals(PING_KEYWORD)) {
                         println("Ping received.")
-                        val serializedMessage:String = Json.encodeToString(GameInformerData(recipientColor, gameName))
+                        val serializedMessage:String = Json.encodeToString(data)
                         BinaryUtils.sendMessage(clientSocket.getOutputStream(), serializedMessage)
                         println("Game informer data sent.")
                     }

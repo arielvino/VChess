@@ -1,13 +1,23 @@
 package net.av.vchess.game.data
 
+import net.av.vchess.game.data.Rulers.TestRuler
 import net.av.vchess.game.data.turn.TurnInfo
-import net.av.vchess.io.IBoardSource
+import net.av.vchess.network.data.GameSettings
 import net.av.vchess.reusables.PlayerColor
 
-class ActualGame(private val listener:IListener, boardSource: IBoardSource, startingAtTurnOf: PlayerColor, val gameRuler: IGameRuler) : GameRepresentation(boardSource, startingAtTurnOf) {
+class ActualGame(private val listener:IListener, val settings: GameSettings) : GameRepresentation(settings.boardSource, settings.startingPlayerColor) {
+    val ruler:IGameRuler
+
+    init {
+        ruler = when(settings.rulerName){
+            "test" -> TestRuler(settings.boardSource, settings.startingPlayerColor)
+            else -> TODO()
+        }
+    }
+
       override fun performTurn(turnInfo: TurnInfo){
           super.performTurn(turnInfo)
-          gameRuler.performTurn(turnInfo)
+          ruler.performTurn(turnInfo)
           val color = when(currentTurn){
               PlayerColor.White->PlayerColor.Black
               PlayerColor.Black->PlayerColor.White
@@ -17,7 +27,7 @@ class ActualGame(private val listener:IListener, boardSource: IBoardSource, star
 
     override fun revertTurn(){
         super.revertTurn()
-        gameRuler.revertTurn()
+        ruler.revertTurn()
     }
 
     interface IListener{

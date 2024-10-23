@@ -41,7 +41,7 @@ class Encryptor {
             if (isHost) {
                 val keyPair = App.keyPair
                 println("Key pair generated.")
-                connector.send(keyPair.first)
+                connector.send(keyPair!!.first)
                 println("Public key sent.")
                 val encryptedKey = connector.receive()
                 println("Symmetric Key received.")

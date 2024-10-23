@@ -2,7 +2,7 @@ package net.av.vchess.android
 
 import android.app.Application
 import android.content.Context
-import net.av.vchess.network.Encryptor
+import net.av.vchess.network.lan.interfaces.Encryptor
 import kotlin.concurrent.thread
 
 class App : Application() {
@@ -10,8 +10,10 @@ class App : Application() {
         lateinit var appContext: Context
             private set
 
-        lateinit var keyPair: Pair<String, String>
+        var keyPair: Pair<String, String>? = null
             private set
+
+        val encryptor = Encryptor()
     }
 
     override fun onCreate() {
@@ -19,7 +21,7 @@ class App : Application() {
 
         appContext = applicationContext
         thread {
-            keyPair = Encryptor.RsaFactory.generateRSAKeyPair()
+            keyPair = net.av.vchess.network.Encryptor.RsaFactory.generateRSAKeyPair()
         }
     }
 }

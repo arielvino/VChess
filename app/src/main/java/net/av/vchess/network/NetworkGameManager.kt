@@ -3,6 +3,7 @@ package net.av.vchess.network
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.av.vchess.game.data.turn.TurnInfo
+import net.av.vchess.network.lan.interfaces.Encryptor
 import kotlin.concurrent.thread
 import kotlin.properties.Delegates
 
@@ -18,14 +19,22 @@ class NetworkGameManager(private val listener: IListener, private val encryptor:
         active = true
         thread {
             while (active) {
-                val message: String = encryptor.receive(true)
+                val message: String = encryptor.receive() ?: continue
 
                 if (message.startsWith(DISCONNECT_KEYWORD)) {
                     stop()
                     listener.onDisconnect()
                 }
                 if (message.startsWith(PERFORM_TURN)) {
-                    listener.onTurnDone(Json.decodeFromString(message.substring(message.indexOf(SEPARATOR) + 1)))
+                    listener.onTurnDone(
+                        Json.decodeFromString(
+                            message.substring(
+                                message.indexOf(
+                                    SEPARATOR
+                                ) + 1
+                            )
+                        )
+                    )
                 }
             }
         }
@@ -41,7 +50,7 @@ class NetworkGameManager(private val listener: IListener, private val encryptor:
         stop()
     }
 
-    fun notifyTurn(turnInfo: TurnInfo){
+    fun notifyTurn(turnInfo: TurnInfo) {
         encryptor.send(PERFORM_TURN + SEPARATOR + Json.encodeToString(turnInfo))
     }
 
